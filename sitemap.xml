@@ -10,5 +10,13 @@
   <url><loc>https://pdf.jsonversal.com/tools/jpg-to-pdf</loc><priority>0.8</priority></url>
   <url><loc>https://pdf.jsonversal.com/tools/page-numbers</loc><priority>0.8</priority></url>
   <url><loc>https://pdf.jsonversal.com/tools/extract-text</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/pdf-to-png</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/sign</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/watermark</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/extract-pages</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/compare</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/protect-unlock</loc><priority>0.8</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/remove-metadata</loc><priority>0.7</priority></url>
+  <url><loc>https://pdf.jsonversal.com/tools/ocr</loc><priority>0.7</priority></url>
   <url><loc>https://pdf.jsonversal.com/privacy</loc><priority>0.3</priority></url>
 </urlset>

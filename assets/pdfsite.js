@@ -165,6 +165,38 @@
     return jszipPromise;
   }
 
+  /* qpdf-wasm is an ES module with pthreads: needs COOP/COEP headers on the page.
+     Note: this build routes stdout to console.log (print callback unused); printErr is
+     silenced so negative tests don't spam the console. */
+  var qpdfPromise;
+  function loadQpdf() {
+    if (qpdfPromise) return qpdfPromise;
+    qpdfPromise = import(VENDOR + 'qpdf.js').then(function (mod) {
+      var init = mod.default || mod;
+      return init({
+        locateFile: function (f) { return VENDOR + f; },
+        print: function () {},
+        printErr: function () {}
+      });
+    });
+    return qpdfPromise;
+  }
+
+  /* tesseract.js is UMD (window.Tesseract); worker/core/lang paths are passed to createWorker */
+  var tessPromise;
+  function loadTesseract() {
+    if (tessPromise) return tessPromise;
+    tessPromise = new Promise(function (resolve, reject) {
+      if (window.Tesseract) { resolve(window.Tesseract); return; }
+      var s = document.createElement('script');
+      s.src = VENDOR + 'tesseract.min.js';
+      s.onload = function () { resolve(window.Tesseract); };
+      s.onerror = function () { reject(new Error('Failed to load the OCR engine.')); };
+      document.head.appendChild(s);
+    });
+    return tessPromise;
+  }
+
   function setProgress(el, pct) {
     if (!el) return;
     el.classList.add('show');
@@ -208,6 +240,8 @@
     parseRanges: parseRanges,
     loadPdfjs: loadPdfjs,
     loadJSZip: loadJSZip,
+    loadQpdf: loadQpdf,
+    loadTesseract: loadTesseract,
     setProgress: setProgress,
     setStatus: setStatus,
     initCookieBar: initCookieBar,

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JPG to PDF — Convert Images to PDF Online (Free, No Upload)</title>
+<meta name="description" content="Combine JPG, PNG and other images into a single PDF in your browser. Choose fit, A4 or letter pages, set orientation and margins, reorder freely. No upload.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/jpg-to-pdf">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="JPG to PDF — free, in-browser, no upload">
+<meta property="og:description" content="Turn photos and scans into one PDF document, entirely in your browser.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/jpg-to-pdf">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JPG to PDF",
+  "url": "https://pdf.jsonversal.com/tools/jpg-to-pdf",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Combine JPG, PNG and other images into a single PDF document in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "JPG to PDF, image to PDF, A4 and letter page sizes, margins, reorder images, no upload, no watermark"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "JPG to PDF", "item": "https://pdf.jsonversal.com/tools/jpg-to-pdf" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Which image formats can I use?", "acceptedAnswer": { "@type": "Answer", "text": "Any image your browser can display: JPG, PNG, WebP, GIF and more. Each image becomes one PDF page." } },
+    { "@type": "Question", "name": "What do the page size options mean?", "acceptedAnswer": { "@type": "Answer", "text": "Fit gives every image its own page at its exact dimensions — ideal for mixed-size scans. A4 and letter place each image centered on a standard page, with an optional margin, which is what offices usually expect for printing." } },
+    { "@type": "Question", "name": "Are my photos uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Images are read and embedded into the PDF locally with pdf-lib. Nothing is uploaded to any server." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / JPG to PDF</nav>
+  <section class="toolhead">
+    <h1>JPG to PDF</h1>
+    <p>Turn photos, scans and screenshots into one clean PDF document. Reorder images, pick a page size — all in your browser.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add images</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">🖼️</div>
+      <p><b>Drop images here</b> or click to choose</p>
+      <p class="hint">JPG, PNG, WebP, GIF — one image per page. Use ↑ ↓ to set the order.</p>
+    </div>
+    <ul class="filelist" id="filelist"></ul>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Page setup</h2>
+      <div class="row gap-lg">
+        <div class="col">
+          <label class="field" for="size">Page size</label>
+          <select id="size">
+            <option value="fit" selected>Fit to image (mixed sizes OK)</option>
+            <option value="a4">A4 (210×297 mm)</option>
+            <option value="letter">Letter (8.5×11 in)</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="orient">Orientation</label>
+          <select id="orient">
+            <option value="auto" selected>Auto (follow each image)</option>
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="margin">Margin</label>
+          <select id="margin">
+            <option value="0" selected>None</option>
+            <option value="36">Small (0.5 in)</option>
+            <option value="72">Large (1 in)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Create PDF</button>
+        <button class="ghost" id="clear" type="button">Clear all</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3>Done — your PDF is ready</h3>
+        <div>
+          <span class="stat">Pages: <b id="r-pages">–</b></span>
+          <span class="stat">Size: <b id="r-size">–</b></span>
+        </div>
+        <div class="dl-row">
+          <button class="dlbtn primary" id="dl" type="button">⬇ Download images.pdf</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Your images are embedded into a PDF inside your browser. Photos of documents, IDs or receipts never leave your device.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to convert images to PDF</h2>
+    <ol>
+      <li>Drop your images into the box above (JPG, PNG, WebP or GIF).</li>
+      <li>Arrange them with the ↑ and ↓ buttons — each image becomes one page.</li>
+      <li>Choose a page size: <b>Fit</b> keeps each image's exact dimensions; <b>A4</b> or <b>Letter</b> centers images on standard pages for printing.</li>
+      <li>Click <b>Create PDF</b> and download the document.</li>
+    </ol>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>For document scans, <b>A4/Letter with a small margin</b> prints reliably on office printers.</li>
+      <li>Mixed photo sizes? <b>Fit to image</b> avoids white bars and cropping.</li>
+      <li>Images are embedded at full original resolution — no hidden downscaling, no quality loss.</li>
+      <li>The resulting file is a normal PDF: openable everywhere, no watermark, no branding.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Can I rotate images that are sideways?</summary>
+        <p>Per-image rotation is on the roadmap. For now, rotate the photos in your gallery app first, then drop them here.</p>
+      </details>
+      <details>
+        <summary>Is there a limit on the number of images?</summary>
+        <p>No fixed limit — the constraint is your device's memory. Hundreds of images work fine on a desktop; on phones, add them in smaller batches.</p>
+      </details>
+      <details>
+        <summary>Does the order of images matter?</summary>
+        <p>Yes. Images are added top to bottom, exactly as listed. Rearrange them before creating the PDF.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="pdf-to-jpg">PDF to JPG<span>Pages back to images</span></a>
+      <a href="page-numbers">Add Page Numbers<span>Number the new document</span></a>
+      <a href="compress">Compress PDF<span>Shrink the result</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var files = [];
+  var dz = document.getElementById('dz');
+  var list = document.getElementById('filelist');
+  var opts = document.getElementById('opts');
+  var runBtn = document.getElementById('run');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+  var lastBlob = null;
+
+  function isImage(f) { return /^image\//.test(f.type) || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name); }
+
+  function render() {
+    P.renderFileList(list, files, {
+      onRemove: function (i) { files.splice(i, 1); render(); },
+      onMoveUp: function (i) { var t = files[i - 1]; files[i - 1] = files[i]; files[i] = t; render(); },
+      onMoveDown: function (i) { var t = files[i + 1]; files[i + 1] = files[i]; files[i] = t; render(); }
+    });
+    opts.style.display = files.length ? '' : 'none';
+    runBtn.disabled = files.length === 0;
+  }
+
+  P.makeDropzone(dz, {
+    accept: 'image/*',
+    multiple: true,
+    onFiles: function (fs) {
+      var added = 0;
+      fs.forEach(function (f) { if (isImage(f)) { files.push(f); added++; } });
+      if (!added) P.toast('Only image files are supported', true);
+      render();
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    files = []; render();
+    result.classList.remove('show');
+    P.setStatus(status, '');
+  });
+
+  runBtn.addEventListener('click', function () {
+    if (!files.length) return;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    P.setProgress(prog, 5);
+    buildPdf().then(function (out) {
+      lastBlob = out.blob;
+      document.getElementById('r-pages').textContent = files.length;
+      document.getElementById('r-size').textContent = P.fmtBytes(out.blob.size);
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('PDF created');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Could not create the PDF', true);
+    }).then(function () { runBtn.disabled = files.length === 0; });
+  });
+
+  var PT = 72 / 25.4; // mm -> pt
+  var SIZES = { a4: [210 * PT, 297 * PT], letter: [8.5 * 72, 11 * 72] };
+
+  function orientFor(w, h, mode) {
+    if (mode === 'portrait') return 'portrait';
+    if (mode === 'landscape') return 'landscape';
+    return w <= h ? 'portrait' : 'landscape';
+  }
+
+  async function buildPdf() {
+    var doc = await PDFLib.PDFDocument.create();
+    var sizeKey = document.getElementById('size').value;
+    var orientMode = document.getElementById('orient').value;
+    var margin = parseFloat(document.getElementById('margin').value);
+
+    for (var i = 0; i < files.length; i++) {
+      P.setStatus(status, 'Adding image ' + (i + 1) + ' of ' + files.length + ' — ' + files[i].name);
+      P.setProgress(prog, 10 + (i / files.length) * 80);
+      var bytes = await P.readAsArrayBuffer(files[i]);
+      var img = await embedImage(doc, bytes, files[i]);
+      if (sizeKey === 'fit') {
+        var page = doc.addPage([img.width, img.height]);
+        page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+      } else {
+        var base = SIZES[sizeKey];
+        var o = orientFor(img.width, img.height, orientMode);
+        var pw = o === 'portrait' ? base[0] : base[1];
+        var ph = o === 'portrait' ? base[1] : base[0];
+        var availW = pw - margin * 2, availH = ph - margin * 2;
+        var ratio = Math.min(availW / img.width, availH / img.height, 1);
+        var w = img.width * ratio, h = img.height * ratio;
+        var p2 = doc.addPage([pw, ph]);
+        p2.drawImage(img, {
+          x: (pw - w) / 2, y: (ph - h) / 2, width: w, height: h
+        });
+      }
+    }
+    P.setStatus(status, 'Saving…');
+    var out = await doc.save({ useObjectStreams: true });
+    return { blob: new Blob([out], { type: 'application/pdf' }) };
+  }
+
+  function embedImage(doc, bytes, file) {
+    // pdf-lib supports png and jpg natively; convert anything else through a canvas
+    var isPng = /png$/i.test(file.type) || /\.png$/i.test(file.name);
+    var isJpg = /jpe?g$/i.test(file.type) || /\.jpe?g$/i.test(file.name);
+    if (isPng) return doc.embedPng(bytes);
+    if (isJpg) return doc.embedJpg(bytes);
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(new Blob([bytes], { type: file.type || 'image/*' }));
+      var im = new Image();
+      im.onload = function () {
+        var c = document.createElement('canvas');
+        c.width = im.naturalWidth; c.height = im.naturalHeight;
+        c.getContext('2d').drawImage(im, 0, 0);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (blob) {
+          blob.arrayBuffer().then(function (buf) { doc.embedJpg(buf).then(resolve, reject); }, reject);
+        }, 'image/jpeg', 0.92);
+      };
+      im.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Could not decode ' + file.name)); };
+      im.src = url;
+    });
+  }
+
+  document.getElementById('dl').addEventListener('click', function () {
+    if (lastBlob) P.download(lastBlob, 'images.pdf');
+  });
+
+  render();
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

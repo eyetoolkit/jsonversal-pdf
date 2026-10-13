@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extract Text from PDF — Copy Text Out of a PDF Online (Free, No Upload)</title>
+<meta name="description" content="Extract all text from a PDF and copy or download it as a .txt file — entirely in your browser. No upload, no signup, no limits.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/extract-text">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Extract Text from PDF — free, in-browser, no upload">
+<meta property="og:description" content="Pull selectable text out of any PDF, locally.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/extract-text">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Extract Text from PDF",
+  "url": "https://pdf.jsonversal.com/tools/extract-text",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Extract text from a PDF and copy or download it as a text file, entirely in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Extract text from PDF, copy text, download as txt, no upload"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Extract Text", "item": "https://pdf.jsonversal.com/tools/extract-text" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Why is my extracted text empty or garbled?", "acceptedAnswer": { "@type": "Answer", "text": "The PDF is probably a scan — a picture of a page with no text layer. Extraction can only recover text that exists as text. For scans you need OCR, which is on the roadmap." } },
+    { "@type": "Question", "name": "Does the layout survive extraction?", "acceptedAnswer": { "@type": "Answer", "text": "Text is extracted page by page with line breaks preserved reasonably well, but columns and complex layouts may read in a different order than they appear. For visual fidelity, use PDF to JPG instead." } },
+    { "@type": "Question", "name": "Is my document uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Text extraction runs locally in your browser with pdf.js. Nothing is transmitted anywhere." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Extract Text</nav>
+  <section class="toolhead">
+    <h1>Extract Text from PDF</h1>
+    <p>Pull the text out of any PDF and copy it or save it as a .txt file. Everything happens in your browser — the document is never uploaded.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">📃</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">Text is extracted locally with pdf.js.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Extract</h2>
+      <div class="row gap-lg">
+        <label class="check"><input type="checkbox" id="pageBreaks" checked> <span>Insert page breaks between pages</span></label>
+      </div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="primary" id="run" type="button">Extract Text</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3>Extracted text</h3>
+        <div>
+          <span class="stat">Characters: <b id="r-chars">–</b></span>
+          <span class="stat">Words: <b id="r-words">–</b></span>
+          <span class="stat">Pages: <b id="r-pages">–</b></span>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="dlbtn primary" id="dl" type="button">⬇ Download .txt</button>
+          <button class="dlbtn" id="copy" type="button">⧉ Copy to clipboard</button>
+        </div>
+        <textarea id="out" style="margin-top:12px;min-height:220px" readonly spellcheck="false" aria-label="Extracted text"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Extraction happens inside this browser tab. Contracts, reports and notes never leave your device — nothing is uploaded, nothing is stored.</p>
+  </div>
+
+  <section class="content">
+    <h2>What extraction can and cannot do</h2>
+    <p>PDFs come in two kinds. <b>Text-based PDFs</b> (created by Word, Google Docs, LaTeX and most reporting tools) contain real text — extraction is instant and accurate. <b>Scanned PDFs</b> are photographs of pages: they contain no text layer, so nothing can be extracted without OCR, which is on this site's roadmap.</p>
+    <p>Layout note: extraction preserves line structure, but multi-column documents may interleave. For pixel-perfect copies of a page, use <a href="pdf-to-jpg">PDF to JPG</a> instead.</p>
+
+    <h2>Common uses</h2>
+    <ul>
+      <li>Copying quotes or clauses out of a contract for an email;</li>
+      <li>Turning a report into notes you can paste into your own document;</li>
+      <li>Checking whether a PDF is a scan before choosing another tool;</li>
+      <li>Archiving the text of a paper alongside the original file.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>My PDF is a scan — what now?</summary>
+        <p>An OCR tool is planned. Until then, converting pages to images with <a href="pdf-to-jpg">PDF to JPG</a> and using any OCR app on your own device keeps the document fully private.</p>
+      </details>
+      <details>
+        <summary>Is there a page or file limit?</summary>
+        <p>No limit from us — extraction runs on your device. Very long documents simply take a few seconds more.</p>
+      </details>
+      <details>
+        <summary>Can I extract from a password-protected PDF?</summary>
+        <p>Not yet. Remove the protection with your own software first; an unlock tool is planned.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="pdf-to-jpg">PDF to JPG<span>Pages as images</span></a>
+      <a href="split">Split PDF<span>Extract page ranges</span></a>
+      <a href="compress">Compress PDF<span>Shrink the file</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pdfjsDoc = null, baseName = 'document', lastText = '';
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      P.setStatus(status, 'Opening PDF…');
+      P.loadPdfjs().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        return pdfjsLib.getDocument({ data: bytes }).promise;
+      }).then(function (doc) {
+        pdfjsDoc = doc;
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; pdfjsDoc = null;
+    opts.style.display = 'none'; result.classList.remove('show');
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!pdfjsDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    P.setProgress(prog, 3);
+    var breaks = document.getElementById('pageBreaks').checked;
+    var n = pdfjsDoc.numPages;
+    var parts = [];
+
+    (function next(i) {
+      if (i > n) return Promise.resolve();
+      P.setStatus(status, 'Reading page ' + i + ' of ' + n + '…');
+      P.setProgress(prog, (i / n) * 95);
+      return pdfjsDoc.getPage(i).then(function (page) {
+        return page.getTextContent();
+      }).then(function (tc) {
+        var lines = {};
+        var order = [];
+        tc.items.forEach(function (item) {
+          if (!item.str) return;
+          var key = Math.round(item.transform[5]);
+          if (!(key in lines)) { lines[key] = []; order.push(key); }
+          lines[key].push(item.str);
+        });
+        order.sort(function (a, b) { return b - a; });
+        var text = order.map(function (k) { return lines[k].join(' '); }).join('\n');
+        parts.push(text.trim());
+        return next(i + 1);
+      });
+    })(1).then(function () {
+      var sep = breaks ? '\n\n--- page break ---\n\n' : '\n\n';
+      lastText = parts.join(sep);
+      document.getElementById('out').value = lastText;
+      document.getElementById('r-chars').textContent = lastText.length.toLocaleString('en-US');
+      document.getElementById('r-words').textContent =
+        (lastText.match(/\S+/g) || []).length.toLocaleString('en-US');
+      document.getElementById('r-pages').textContent = n;
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Text extracted');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Extraction failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  document.getElementById('dl').addEventListener('click', function () {
+    if (!lastText) return;
+    P.download(new Blob([lastText], { type: 'text/plain;charset=utf-8' }), baseName + '.txt');
+  });
+
+  document.getElementById('copy').addEventListener('click', function () {
+    var out = document.getElementById('out');
+    if (!lastText) { P.toast('Nothing to copy', true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(function () { P.toast('Copied to clipboard'); },
+        function () { out.select(); document.execCommand('copy'); P.toast('Copied to clipboard'); });
+    } else {
+      out.select(); document.execCommand('copy'); P.toast('Copied to clipboard');
+    }
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

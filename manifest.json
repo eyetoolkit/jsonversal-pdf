@@ -1,0 +1,18 @@
+{
+  "name": "pdf.jsonversal.com — Privacy-first PDF tools",
+  "short_name": "pdf · jsonversal",
+  "description": "Merge, split, compress, rotate and convert PDFs entirely in your browser. Nothing is uploaded.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

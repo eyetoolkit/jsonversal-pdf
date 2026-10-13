@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Split PDF — Extract Pages or Separate PDF Online (Free, No Upload)</title>
+<meta name="description" content="Split a PDF into single pages, extract page ranges, or chunk it every N pages — all in your browser. No upload, no signup, no watermark, no limits.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/split">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Split PDF — free, in-browser, no upload">
+<meta property="og:description" content="Extract page ranges or split a PDF into single pages, entirely in your browser.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/split">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Split PDF",
+  "url": "https://pdf.jsonversal.com/tools/split",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Split a PDF into single pages, extract page ranges, or chunk every N pages, entirely in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Split PDF, extract page ranges, single-page split, no upload, no watermark"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Split PDF", "item": "https://pdf.jsonversal.com/tools/split" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What does the page range format mean?", "acceptedAnswer": { "@type": "Answer", "text": "Use comma-separated page numbers and ranges: 1,3,5-8 extracts pages 1, 3 and pages 5 through 8. Pages are numbered from 1." } },
+    { "@type": "Question", "name": "How do I download all the split pages at once?", "acceptedAnswer": { "@type": "Answer", "text": "After splitting, click Download all as ZIP. The individual files are also listed separately if you only need a few of them." } },
+    { "@type": "Question", "name": "Is my PDF uploaded when I split it?", "acceptedAnswer": { "@type": "Answer", "text": "No. Splitting runs entirely in your browser with the open-source pdf-lib library. There is no upload and no server-side processing." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Split PDF</nav>
+  <section class="toolhead">
+    <h1>Split PDF</h1>
+    <p>Separate one PDF into many — extract a page range, split into single pages, or chunk it every N pages. Everything runs locally.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">📄</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">Only one file is needed — this tool splits it into pieces.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Choose how to split</h2>
+      <div class="row gap-lg">
+        <label class="check"><input type="radio" name="mode" value="range" checked> <span>Extract page range <span class="desc">— one output PDF</span></span></label>
+        <label class="check"><input type="radio" name="mode" value="single"> <span>Split into single pages <span class="desc">— one PDF per page</span></span></label>
+        <label class="check"><input type="radio" name="mode" value="chunk"> <span>Split every N pages</span></label>
+      </div>
+
+      <div id="rangeOpts" style="margin-top:14px">
+        <label class="field" for="ranges">Pages to extract</label>
+        <input type="text" id="ranges" placeholder="e.g. 1,3,5-8" autocomplete="off">
+        <p class="hint" id="pageInfo">Comma-separated pages and ranges. Pages are numbered from 1.</p>
+      </div>
+
+      <div id="chunkOpts" style="margin-top:14px;display:none">
+        <label class="field" for="chunkN">Pages per output file</label>
+        <input type="number" id="chunkN" min="1" value="1" style="max-width:120px">
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Split PDF</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3 id="r-title">Done</h3>
+        <div>
+          <span class="stat">Output files: <b id="r-count">–</b></span>
+          <span class="stat">Total size: <b id="r-size">–</b></span>
+        </div>
+        <div class="dl-row" id="r-links"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Your PDF is opened and split inside your browser. The file is never uploaded, and there is no limit on how many times you can split.</p>
+  </div>
+
+  <section class="content">
+    <h2>Three ways to split a PDF</h2>
+    <ul>
+      <li><b>Extract a page range</b> — pull selected pages (for example <code>2,7,9-12</code>) into one new PDF. Ideal for saving the pages that matter from a long report.</li>
+      <li><b>Split into single pages</b> — every page becomes its own PDF, downloaded individually or as one ZIP archive.</li>
+      <li><b>Split every N pages</b> — break a long document into equal chunks (for example 10 pages per file), useful for email attachments with size caps.</li>
+    </ul>
+
+    <h2>Common uses</h2>
+    <p>Extracting a signed page from a contract, separating chapters of an ebook, breaking a scanned batch into individual invoices, or trimming a slide deck down to the pages you will present. Because the split happens on your device, sensitive documents never travel over the network.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Can I split a password-protected PDF?</summary>
+        <p>Not yet — a dedicated unlock tool is on the roadmap. Remove the password with your own software first, then come back.</p>
+      </details>
+      <details>
+        <summary>Do the split files lose quality?</summary>
+        <p>No. Splitting copies the original page streams into new documents. Text stays selectable and images keep their original resolution.</p>
+      </details>
+      <details>
+        <summary>What happens to very large PDFs?</summary>
+        <p>The tool works entirely in memory, so the limit is your device's RAM rather than an artificial cap. A typical desktop browser handles documents of hundreds of megabytes without trouble.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="merge">Merge PDF<span>Combine files into one</span></a>
+      <a href="organize">Organize PDF<span>Reorder &amp; delete pages</span></a>
+      <a href="extract-text">Extract Text<span>Copy text out of a PDF</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pageCount = 0, srcDoc = null;
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+  var rLinks = document.getElementById('r-links');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+  function mode() {
+    var r = document.querySelector('input[name=mode]:checked');
+    return r ? r.value : 'range';
+  }
+  function syncModeUI() {
+    var m = mode();
+    document.getElementById('rangeOpts').style.display = m === 'range' ? '' : 'none';
+    document.getElementById('chunkOpts').style.display = m === 'chunk' ? '' : 'none';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=mode]'), function (r) {
+    r.addEventListener('change', syncModeUI);
+  });
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      P.setStatus(status, 'Opening PDF…');
+      P.readAsArrayBuffer(f).then(function (bytes) {
+        return PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+      }).then(function (doc) {
+        srcDoc = doc;
+        pageCount = doc.getPageCount();
+        document.getElementById('pageInfo').textContent =
+          f.name + ' has ' + pageCount + ' page' + (pageCount === 1 ? '' : 's') + '. Use formats like 1,3,5-8.';
+        document.getElementById('ranges').value = '1-' + pageCount;
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; srcDoc = null; pageCount = 0;
+    opts.style.display = 'none';
+    result.classList.remove('show');
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!srcDoc) return;
+    result.classList.remove('show');
+    rLinks.innerHTML = '';
+    var runBtn = this;
+    runBtn.disabled = true;
+    P.setProgress(prog, 5);
+    splitPdf().then(function (out) {
+      document.getElementById('r-title').textContent = out.title;
+      document.getElementById('r-count').textContent = out.files.length;
+      document.getElementById('r-size').textContent = P.fmtBytes(out.totalSize);
+      out.files.forEach(function (f) {
+        var b = document.createElement('button');
+        b.className = 'dlbtn'; b.type = 'button'; b.textContent = '⬇ ' + f.name;
+        b.addEventListener('click', function () { P.download(f.blob, f.name); });
+        rLinks.appendChild(b);
+      });
+      if (out.files.length > 1) {
+        var zip = document.createElement('button');
+        zip.className = 'dlbtn primary'; zip.type = 'button';
+        zip.textContent = '⬇ Download all as ZIP';
+        zip.addEventListener('click', function () {
+          P.setStatus(status, 'Packing ZIP…');
+          P.loadJSZip().then(function (JSZip) {
+            var z = new JSZip();
+            out.files.forEach(function (f) { z.file(f.name, f.blob); });
+            return z.generateAsync({ type: 'blob' });
+          }).then(function (blob) {
+            P.download(blob, 'split-pages.zip');
+            P.setStatus(status, '');
+          }).catch(function () { P.toast('ZIP packing failed', true); });
+        });
+        rLinks.appendChild(zip);
+      }
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Split complete');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Split failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  async function splitPdf() {
+    var m = mode();
+    var out = [];
+    if (m === 'range') {
+      var sel = P.parseRanges(document.getElementById('ranges').value, pageCount);
+      var doc = await PDFLib.PDFDocument.create();
+      var pages = await doc.copyPages(srcDoc, sel.map(function (n) { return n - 1; }));
+      pages.forEach(function (p) { doc.addPage(p); });
+      var bytes = await doc.save({ useObjectStreams: true });
+      out.push({ name: 'extracted-pages.pdf', blob: new Blob([bytes], { type: 'application/pdf' }) });
+      return { title: 'Done — extracted ' + sel.length + ' page' + (sel.length === 1 ? '' : 's'), files: out, totalSize: out[0].blob.size };
+    }
+    var n = m === 'single' ? 1 : Math.max(1, parseInt(document.getElementById('chunkN').value, 10) || 1);
+    for (var start = 0; start < pageCount; start += n) {
+      P.setStatus(status, 'Building file ' + (out.length + 1) + '…');
+      var chunk = [];
+      for (var q = start; q < Math.min(start + n, pageCount); q++) chunk.push(q);
+      var d = await PDFLib.PDFDocument.create();
+      var cp = await d.copyPages(srcDoc, chunk);
+      cp.forEach(function (p) { d.addPage(p); });
+      var b = await d.save({ useObjectStreams: true });
+      var from = start + 1, to = Math.min(start + n, pageCount);
+      out.push({
+        name: n === 1 ? 'page-' + from + '.pdf' : 'pages-' + from + '-' + to + '.pdf',
+        blob: new Blob([b], { type: 'application/pdf' })
+      });
+    }
+    var total = out.reduce(function (s, f) { return s + f.blob.size; }, 0);
+    return {
+      title: 'Done — ' + out.length + ' file' + (out.length === 1 ? '' : 's') + ' ready',
+      files: out, totalSize: total
+    };
+  }
+
+  syncModeUI();
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

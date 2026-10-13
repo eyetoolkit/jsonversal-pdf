@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Page Numbers to PDF — Stamp Page Numbers Online (Free, No Upload)</title>
+<meta name="description" content="Add page numbers to any PDF in your browser. Choose position, format, start number, size and color. No upload, no signup, no watermark.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/page-numbers">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Add Page Numbers to PDF — free, in-browser, no upload">
+<meta property="og:description" content="Stamp page numbers anywhere on your PDF pages, locally.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/page-numbers">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Add Page Numbers to PDF",
+  "url": "https://pdf.jsonversal.com/tools/page-numbers",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Add page numbers to a PDF in the browser with custom position, format, start number, size and color.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Add page numbers, custom position and format, start number, skip first page, no upload, no watermark"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Add Page Numbers", "item": "https://pdf.jsonversal.com/tools/page-numbers" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Can I start numbering from a specific page number?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Set Start number to any value — useful when the PDF is one chapter of a larger document and page 1 of the file should display, say, 42." } },
+    { "@type": "Question", "name": "Can I skip the cover page?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Enable Skip first page and the cover stays clean while numbering continues from page 2." } },
+    { "@type": "Question", "name": "Is the PDF uploaded to add numbers?", "acceptedAnswer": { "@type": "Answer", "text": "No. The numbers are drawn onto the pages in your browser with pdf-lib and the file is saved straight back to your disk." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Add Page Numbers</nav>
+  <section class="toolhead">
+    <h1>Add Page Numbers to PDF</h1>
+    <p>Stamp page numbers on any document — position, format and style are up to you. Applied locally, saved instantly.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">🔢</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">Numbers are drawn onto the pages in your browser.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Number style</h2>
+      <div class="row gap-lg">
+        <div class="col">
+          <label class="field" for="pos">Position</label>
+          <select id="pos">
+            <option value="bc" selected>Bottom center</option>
+            <option value="br">Bottom right</option>
+            <option value="bl">Bottom left</option>
+            <option value="tc">Top center</option>
+            <option value="tr">Top right</option>
+            <option value="tl">Top left</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="fmt">Format</label>
+          <select id="fmt">
+            <option value="n" selected>1</option>
+            <option value="pn">Page 1</option>
+            <option value="nn">1 / N</option>
+            <option value="dash">- 1 -</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="start">Start number</label>
+          <input type="number" id="start" min="0" value="1" style="max-width:110px">
+        </div>
+      </div>
+      <div class="row gap-lg" style="margin-top:14px">
+        <div class="col">
+          <label class="field" for="size">Font size</label>
+          <input type="number" id="size" min="6" max="48" value="11" style="max-width:110px">
+        </div>
+        <div class="col">
+          <label class="field" for="color">Color</label>
+          <select id="color">
+            <option value="#000000" selected>Black</option>
+            <option value="#555555">Gray</option>
+            <option value="#ffffff">White</option>
+            <option value="#b91c1c">Red</option>
+            <option value="#1d4ed8">Blue</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="check" style="margin-top:18px"><input type="checkbox" id="skipFirst"> <span>Skip first page <span class="desc">— cover stays clean</span></span></label>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Add Page Numbers</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3>Done — numbers added</h3>
+        <div>
+          <span class="stat">Numbered pages: <b id="r-count">–</b></span>
+          <span class="stat">Size: <b id="r-size">–</b></span>
+        </div>
+        <div class="dl-row">
+          <button class="dlbtn primary" id="dl" type="button">⬇ Download numbered.pdf</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Your PDF is opened and re-saved in this browser tab. The file is never uploaded, and no watermark or branding is added — just your numbers.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to add page numbers</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Pick a position (six corners and centers), a format, a start number, font size and color.</li>
+      <li>Optionally skip the first page so a cover sheet stays clean.</li>
+      <li>Click <b>Add Page Numbers</b> and download the finished document.</li>
+    </ol>
+
+    <h2>Formatting options</h2>
+    <ul>
+      <li><b>1</b> — plain number, the most common choice for reports.</li>
+      <li><b>Page 1</b> — explicit, good for handouts.</li>
+      <li><b>1 / N</b> — "page X of Y", ideal for contracts and printed packets.</li>
+      <li><b>- 1 -</b> — classic book and thesis style.</li>
+    </ul>
+    <p>The start number matters when your file is part of a larger document: numbering this chapter from 42 keeps the whole set consistent.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Will the numbers cover my content?</summary>
+        <p>Numbers are placed in the page margin with a small inset, so they sit outside the printable area of typical documents. If your content runs to the very edge, choose a different corner.</p>
+      </details>
+      <details>
+        <summary>Are the numbers permanent?</summary>
+        <p>Yes — they are drawn into the page content itself, so they print and display everywhere, unlike page numbers offered by some viewers that only exist on screen.</p>
+      </details>
+      <details>
+        <summary>Can I number only a page range?</summary>
+        <p>Use Skip first page for the common "no number on the cover" case. Selective ranges are on the roadmap; for now, split the document with the <a href="split">Split PDF</a> tool, number the part you need, and merge again.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="organize">Organize PDF<span>Reorder &amp; delete pages</span></a>
+      <a href="merge">Merge PDF<span>Reassemble numbered parts</span></a>
+      <a href="jpg-to-pdf">JPG to PDF<span>Build a document from scans</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, srcDoc = null, pageCount = 0, lastBlob = null;
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  function hexToRgb(hex) {
+    var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!m) return { r: 0, g: 0, b: 0 };
+    return { r: parseInt(m[1], 16) / 255, g: parseInt(m[2], 16) / 255, b: parseInt(m[3], 16) / 255 };
+  }
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      P.setStatus(status, 'Opening PDF…');
+      P.readAsArrayBuffer(f).then(function (bytes) {
+        return PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+      }).then(function (doc) {
+        srcDoc = doc;
+        pageCount = doc.getPageCount();
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; srcDoc = null; pageCount = 0;
+    opts.style.display = 'none'; result.classList.remove('show');
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!srcDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    P.setStatus(status, 'Drawing numbers…');
+    P.setProgress(prog, 40);
+    addNumbers().then(function (out) {
+      lastBlob = out.blob;
+      document.getElementById('r-count').textContent = out.count;
+      document.getElementById('r-size').textContent = P.fmtBytes(out.blob.size);
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Page numbers added');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Failed to add numbers', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  function label(num, total) {
+    switch (document.getElementById('fmt').value) {
+      case 'pn': return 'Page ' + num;
+      case 'nn': return num + ' / ' + total;
+      case 'dash': return '- ' + num + ' -';
+      default: return String(num);
+    }
+  }
+
+  function addNumbers() {
+    var color = hexToRgb(document.getElementById('color').value);
+    var rgb = PDFLib.rgb(color.r, color.g, color.b);
+    var size = Math.max(6, Math.min(48, parseFloat(document.getElementById('size').value) || 11));
+    var start = Math.max(0, parseInt(document.getElementById('start').value, 10) || 0);
+    var pos = document.getElementById('pos').value;
+    var skipFirst = document.getElementById('skipFirst').checked;
+    var inset = 28;
+    var count = 0;
+
+    return srcDoc.embedFont(PDFLib.StandardFonts.Helvetica).then(function (font) {
+      for (var i = 0; i < pageCount; i++) {
+        if (skipFirst && i === 0) continue;
+        var page = srcDoc.getPage(i);
+        var w = page.getWidth(), h = page.getHeight();
+        var num = start + i;
+        var text = label(num, pageCount);
+        var tw = font.widthOfTextAtSize(text, size);
+        var x, y;
+        if (pos === 'bc') { x = (w - tw) / 2; y = inset; }
+        else if (pos === 'br') { x = w - tw - inset; y = inset; }
+        else if (pos === 'bl') { x = inset; y = inset; }
+        else if (pos === 'tc') { x = (w - tw) / 2; y = h - inset - size; }
+        else if (pos === 'tr') { x = w - tw - inset; y = h - inset - size; }
+        else { x = inset; y = h - inset - size; }
+        page.drawText(text, { x: x, y: y, size: size, font: font, color: rgb });
+        count++;
+      }
+      return srcDoc.save({ useObjectStreams: true });
+    }).then(function (bytes) {
+      return { blob: new Blob([bytes], { type: 'application/pdf' }), count: count };
+    });
+  }
+
+  document.getElementById('dl').addEventListener('click', function () {
+    if (lastBlob) P.download(lastBlob, 'numbered.pdf');
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

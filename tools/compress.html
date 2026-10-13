@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compress PDF — Reduce PDF File Size Online (Free, No Upload)</title>
+<meta name="description" content="Shrink PDF file size in your browser with light (lossless) or strong compression. Honest savings, no upload, no signup, no watermark.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/compress">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Compress PDF — free, in-browser, no upload">
+<meta property="og:description" content="Reduce PDF size locally with light or strong compression.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/compress">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Compress PDF",
+  "url": "https://pdf.jsonversal.com/tools/compress",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Reduce PDF file size in the browser with lossless or strong compression.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Compress PDF, reduce file size, light and strong compression, no upload, no watermark"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compress PDF", "item": "https://pdf.jsonversal.com/tools/compress" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How much smaller will my PDF get?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on the file. Light compression typically saves 5-20% with zero quality loss. Strong compression re-renders pages as images and can save 50-90% on scan-heavy documents, but text is no longer selectable." } },
+    { "@type": "Question", "name": "What is the difference between light and strong compression?", "acceptedAnswer": { "@type": "Answer", "text": "Light rewrites the PDF structure efficiently and keeps everything lossless. Strong re-renders each page as a JPEG image, which shrinks photo-heavy scans dramatically but sacrifices selectable text and some sharpness." } },
+    { "@type": "Question", "name": "Is my file uploaded for compression?", "acceptedAnswer": { "@type": "Answer", "text": "No. Compression runs entirely in your browser. There is no server, no queue and no file-size limit imposed by us." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Compress PDF</nav>
+  <section class="toolhead">
+    <h1>Compress PDF</h1>
+    <p>Make a PDF smaller to fit an email attachment or upload limit. Choose lossless or maximum shrink — and see the real numbers before you download.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">📦</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">Original size: <b id="origSize">–</b></p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Compression level</h2>
+      <div class="row gap-lg">
+        <label class="check"><input type="radio" name="level" value="light" checked> <span>Light — lossless <span class="desc">rewrites structure, keeps full quality</span></span></label>
+        <label class="check"><input type="radio" name="level" value="strong"> <span>Strong — smallest file <span class="desc">re-renders pages as images; text not selectable</span></span></label>
+      </div>
+      <div id="strongOpts" style="margin-top:14px;display:none">
+        <div class="row gap-lg">
+          <div class="col">
+            <label class="field" for="quality">Image quality</label>
+            <select id="quality">
+              <option value="0.92">High (92%)</option>
+              <option value="0.75" selected>Balanced (75%)</option>
+              <option value="0.55">Small (55%)</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="field" for="scale">Resolution</label>
+            <select id="scale">
+              <option value="2">High (2×)</option>
+              <option value="1.5" selected>Medium (1.5×)</option>
+              <option value="1">Low (1×)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Compress PDF</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3>Done</h3>
+        <div>
+          <span class="stat">Original: <b id="r-orig">–</b></span>
+          <span class="stat">Compressed: <b id="r-new">–</b></span>
+          <span class="stat">Saved: <b id="r-saved">–</b></span>
+        </div>
+        <p class="hint" id="r-note"></p>
+        <div class="dl-row">
+          <button class="dlbtn primary" id="dl" type="button">⬇ Download compressed.pdf</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note warn">
+    <span class="ni">!</span>
+    <p><b>Honest expectations.</b> Browser-based compression is real but not magic: PDFs that are mostly text may only shrink a few percent. If the result is barely smaller, the file was already near-optimal — no upload-based service could do dramatically better without quality loss.</p>
+  </div>
+
+  <section class="content">
+    <h2>Choosing a compression level</h2>
+    <ul>
+      <li><b>Light (lossless)</b> — rebuilds the PDF with efficient object streams. Text stays selectable, images stay untouched. Typical saving: 5–20%, best on files exported by bloated tools.</li>
+      <li><b>Strong</b> — renders each page to an image and rebuilds the PDF. Typical saving: 50–90% on scanned or photo-heavy documents. The trade-off: text is no longer selectable or searchable, and fine print can soften. Great for emailing a scan; wrong choice for a contract you need to search.</li>
+    </ul>
+
+    <h2>Why some PDFs don't compress</h2>
+    <p>A PDF that already contains tightly compressed JPEG images has almost nothing left to squeeze — the content is already near its entropy limit. In those cases light compression still helps a little by removing redundant structure, and strong compression trades quality for size. We show you the actual numbers either way.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Will compression damage my document?</summary>
+        <p>Light compression is mathematically lossless. Strong compression re-encodes page images as JPEG — visually fine at the balanced setting, but it does discard some detail, which is why the level is your choice.</p>
+      </details>
+      <details>
+        <summary>Can I compress a scanned PDF?</summary>
+        <p>Yes — scans are exactly where strong compression shines, because the page images usually carry far more resolution than needed for reading on screen.</p>
+      </details>
+      <details>
+        <summary>Is there a file size limit?</summary>
+        <p>No limit from us. Very large files simply take longer and need more memory, because everything runs on your own device.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="split">Split PDF<span>Break large files into parts</span></a>
+      <a href="pdf-to-jpg">PDF to JPG<span>Export pages as images</span></a>
+      <a href="merge">Merge PDF<span>Combine files into one</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, srcBytes = null, pdfjsDoc = null, lastBlob = null;
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+  function level() {
+    var r = document.querySelector('input[name=level]:checked');
+    return r ? r.value : 'light';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=level]'), function (r) {
+    r.addEventListener('change', function () {
+      document.getElementById('strongOpts').style.display = level() === 'strong' ? '' : 'none';
+    });
+  });
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      document.getElementById('origSize').textContent = P.fmtBytes(f.size);
+      P.setStatus(status, 'Opening PDF…');
+      P.readAsArrayBuffer(f).then(function (bytes) {
+        srcBytes = bytes;
+        if (level() === 'strong') {
+          return P.loadPdfjs().then(function () {
+            return pdfjsLib.getDocument({ data: bytes }).promise;
+          }).then(function (doc) { pdfjsDoc = doc; });
+        }
+        return PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+      }).then(function () {
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; srcBytes = null; pdfjsDoc = null;
+    opts.style.display = 'none'; result.classList.remove('show');
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!file) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    P.setProgress(prog, 5);
+    var task = level() === 'light' ? compressLight() : ensurePdfjs().then(compressStrong);
+    task.then(function (blob) {
+      lastBlob = blob;
+      var orig = file.size, neu = blob.size;
+      var pct = orig > 0 ? Math.max(0, Math.round((1 - neu / orig) * 100)) : 0;
+      document.getElementById('r-orig').textContent = P.fmtBytes(orig);
+      document.getElementById('r-new').textContent = P.fmtBytes(neu);
+      document.getElementById('r-saved').textContent = pct + '%';
+      document.getElementById('r-note').textContent = neu >= orig
+        ? 'The recompressed file is not smaller than the original — your PDF was already efficient. You can keep the original with confidence.'
+        : '';
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast(pct > 0 ? 'Saved ' + pct + '%' : 'No further reduction possible');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Compression failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  function compressLight() {
+    P.setStatus(status, 'Optimizing structure…');
+    return PDFLib.PDFDocument.load(srcBytes, { ignoreEncryption: true }).then(function (doc) {
+      return doc.save({ useObjectStreams: true });
+    }).then(function (bytes) {
+      return new Blob([bytes], { type: 'application/pdf' });
+    });
+  }
+
+  function ensurePdfjs() {
+    if (pdfjsDoc) return Promise.resolve(pdfjsDoc);
+    return P.loadPdfjs().then(function () {
+      return pdfjsLib.getDocument({ data: srcBytes }).promise;
+    }).then(function (doc) { pdfjsDoc = doc; return doc; });
+  }
+
+  function compressStrong() {
+    var quality = parseFloat(document.getElementById('quality').value);
+    var scale = parseFloat(document.getElementById('scale').value);
+    P.setStatus(status, 'Rendering pages…');
+    var out = PDFLib.PDFDocument.create();
+    return out.then(function (doc) {
+      var n = pdfjsDoc.numPages;
+      return (function next(i) {
+        if (i > n) return doc;
+        P.setStatus(status, 'Rendering page ' + i + ' of ' + n + '…');
+        P.setProgress(prog, (i / n) * 90);
+        return pdfjsDoc.getPage(i).then(function (pdfPage) {
+          var viewport = pdfPage.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.floor(viewport.width));
+          canvas.height = Math.max(1, Math.floor(viewport.height));
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          return pdfPage.render({ canvasContext: ctx, viewport: viewport }).promise.then(function () {
+            return new Promise(function (resolve) {
+              canvas.toBlob(function (blob) { resolve(blob); }, 'image/jpeg', quality);
+            });
+          }).then(function (jpegBlob) {
+            return jpegBlob.arrayBuffer();
+          }).then(function (buf) {
+            return doc.embedJpg(buf).then(function (img) {
+              var page = doc.addPage([img.width, img.height]);
+              page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+            });
+          }).then(function () { return next(i + 1); });
+        });
+      })(1).then(function () {
+        P.setStatus(status, 'Saving…');
+        return doc.save({ useObjectStreams: true });
+      });
+    }).then(function (bytes) {
+      return new Blob([bytes], { type: 'application/pdf' });
+    });
+  }
+
+  document.getElementById('dl').addEventListener('click', function () {
+    if (lastBlob) P.download(lastBlob, 'compressed.pdf');
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

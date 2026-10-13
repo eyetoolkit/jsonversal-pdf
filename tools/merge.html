@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merge PDF — Combine PDF Files Online (Free, No Upload)</title>
+<meta name="description" content="Merge multiple PDF files into one document directly in your browser. Reorder pages, no upload, no signup, no watermark, no file-size limit.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/merge">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Merge PDF — free, in-browser, no upload">
+<meta property="og:description" content="Combine multiple PDFs into one document. Runs entirely in your browser.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/merge">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Merge PDF",
+  "url": "https://pdf.jsonversal.com/tools/merge",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Combine multiple PDF files into a single document, entirely in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Merge PDFs, reorder files before merging, no upload, no watermark, no signup"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Merge PDF", "item": "https://pdf.jsonversal.com/tools/merge" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is there a limit to how many PDFs I can merge?", "acceptedAnswer": { "@type": "Answer", "text": "No fixed limit. Because merging happens in your browser, the only constraint is your device's memory. Merging dozens of files works fine on a normal desktop computer." } },
+    { "@type": "Question", "name": "Does merging reduce quality?", "acceptedAnswer": { "@type": "Answer", "text": "No. Merging copies the original page content into a new container without re-encoding images or text, so the output is identical in quality to the inputs." } },
+    { "@type": "Question", "name": "Are my files uploaded to a server?", "acceptedAnswer": { "@type": "Answer", "text": "Never. The merge runs entirely in your browser using the open-source pdf-lib library. There is no upload endpoint and no server-side processing at all." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Merge PDF</nav>
+  <section class="toolhead">
+    <h1>Merge PDF</h1>
+    <p>Combine multiple PDF files into a single document. Drag to set the order, then merge — all in your browser, with no upload.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add PDF files</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">📄</div>
+      <p><b>Drop PDF files here</b> or click to choose</p>
+      <p class="hint">You can add more files at any time. Use ↑ ↓ to set the merge order.</p>
+    </div>
+    <ul class="filelist" id="filelist"></ul>
+
+    <hr class="sep">
+
+    <h2>2 · Merge</h2>
+    <div class="btn-row">
+      <button class="primary" id="run" type="button" disabled>Merge PDFs</button>
+      <button class="ghost" id="clear" type="button">Clear all</button>
+    </div>
+    <div class="progress" id="prog"><i></i></div>
+    <div class="statusline" id="status"></div>
+
+    <div class="result" id="result">
+      <h3>Done — your merged PDF is ready</h3>
+      <div>
+        <span class="stat">Pages: <b id="r-pages">–</b></span>
+        <span class="stat">Size: <b id="r-size">–</b></span>
+        <span class="stat">From <b id="r-files">–</b> files</span>
+      </div>
+      <div class="dl-row">
+        <button class="dlbtn primary" id="dl" type="button">⬇ Download merged.pdf</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Your files are read by your browser and combined on your own device. Nothing is uploaded to any server — you can disconnect from the internet and this tool still works.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to merge PDF files</h2>
+    <ol>
+      <li>Drop two or more PDF files into the box above (or click it to browse).</li>
+      <li>Arrange them in the order you want using the ↑ and ↓ buttons.</li>
+      <li>Click <b>Merge PDFs</b>. The combined document appears in seconds.</li>
+      <li>Download <b>merged.pdf</b> to your device.</li>
+    </ol>
+
+    <h2>Why merge in a browser instead of uploading?</h2>
+    <p>Upload-based PDF mergers ask you to send contracts, invoices and personal documents to a remote server and trust that they are deleted afterwards. This tool needs no such trust: the merge happens inside this tab, using <b>pdf-lib</b>, the same open-source library many server-side tools are built on.</p>
+    <ul>
+      <li><b>No quality loss</b> — pages are copied as-is; images and text are never re-encoded.</li>
+      <li><b>No limits</b> — no daily caps, no file-size tiers, no account required.</li>
+      <li><b>No watermark</b> — the output is a clean, standard PDF anyone can open.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Can I merge password-protected PDFs?</summary>
+        <p>Not with this tool — protected files must be unlocked first. A dedicated unlock tool is on the roadmap; until then, remove the password with your own software before merging.</p>
+      </details>
+      <details>
+        <summary>Will the merged file keep bookmarks and links?</summary>
+        <p>Internal links and most annotations are preserved. Bookmarks (the outline panel) are not carried over — the merged document starts with a fresh, empty outline.</p>
+      </details>
+      <details>
+        <summary>Does the order of files matter?</summary>
+        <p>Yes. Files are merged top to bottom, exactly as listed. Use the arrow buttons on each file to rearrange before clicking Merge PDFs.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="split">Split PDF<span>Extract or separate pages</span></a>
+      <a href="organize">Organize PDF<span>Reorder &amp; delete pages</span></a>
+      <a href="compress">Compress PDF<span>Reduce file size</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var files = [];
+  var dz = document.getElementById('dz');
+  var list = document.getElementById('filelist');
+  var runBtn = document.getElementById('run');
+  var clearBtn = document.getElementById('clear');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+  var lastBlob = null;
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  function render() {
+    P.renderFileList(list, files, {
+      onRemove: function (i) { files.splice(i, 1); render(); },
+      onMoveUp: function (i) { var t = files[i - 1]; files[i - 1] = files[i]; files[i] = t; render(); },
+      onMoveDown: function (i) { var t = files[i + 1]; files[i + 1] = files[i]; files[i] = t; render(); }
+    });
+    runBtn.disabled = files.length < 2;
+  }
+
+  P.makeDropzone(dz, {
+    multiple: true,
+    onFiles: function (fs) {
+      var added = 0;
+      fs.forEach(function (f) { if (isPdf(f)) { files.push(f); added++; } });
+      if (!added) P.toast('Only PDF files are supported', true);
+      render();
+    }
+  });
+
+  clearBtn.addEventListener('click', function () { files = []; render(); result.classList.remove('show'); P.setStatus(status, ''); });
+
+  runBtn.addEventListener('click', function () {
+    if (files.length < 2) return;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    P.setStatus(status, 'Merging…');
+    P.setProgress(prog, 5);
+    mergeFiles().then(function (out) {
+      lastBlob = out.blob;
+      document.getElementById('r-pages').textContent = out.pages;
+      document.getElementById('r-files').textContent = files.length;
+      document.getElementById('r-size').textContent = P.fmtBytes(out.blob.size);
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, 'Merged ' + files.length + ' files into ' + out.pages + ' pages.');
+      P.toast('Merge complete');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Merge failed', true);
+    }).then(function () { runBtn.disabled = files.length < 2; });
+  });
+
+  async function mergeFiles() {
+    var merged = await PDFLib.PDFDocument.create();
+    var pages = 0;
+    for (var i = 0; i < files.length; i++) {
+      P.setStatus(status, 'Merging ' + (i + 1) + ' of ' + files.length + ' — ' + files[i].name);
+      P.setProgress(prog, 10 + (i / files.length) * 80);
+      var bytes = await P.readAsArrayBuffer(files[i]);
+      var src = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+      var copied = await merged.copyPages(src, src.getPageIndices());
+      copied.forEach(function (p) { merged.addPage(p); pages++; });
+    }
+    P.setStatus(status, 'Saving…');
+    var blob = new Blob([await merged.save({ useObjectStreams: true })], { type: 'application/pdf' });
+    return { blob: blob, pages: pages };
+  }
+
+  document.getElementById('dl').addEventListener('click', function () {
+    if (lastBlob) P.download(lastBlob, 'merged.pdf');
+  });
+
+  render();
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

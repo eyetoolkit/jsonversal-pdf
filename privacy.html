@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — pdf.jsonversal.com</title>
+<meta name="description" content="How pdf.jsonversal.com handles your data: it doesn't. All tools run locally in your browser; nothing is uploaded, stored or tracked.">
+<link rel="canonical" href="https://pdf.jsonversal.com/privacy">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="./">All tools</a> / Privacy Policy</nav>
+  <section class="toolhead">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: 13 October 2026</p>
+  </section>
+
+  <section class="content" style="margin-top:20px">
+    <h2>The short version</h2>
+    <p><b>We never receive your files.</b> Every tool on this site runs entirely inside your browser. There is no upload endpoint, no server-side processing, and no database. Your documents, images and text stay on your device from the moment you drop them in until the moment you save the result.</p>
+
+    <h2>What we do not collect</h2>
+    <ul>
+      <li><b>Your files</b> — they are read by your browser and processed locally. They are never transmitted to us or anyone else.</li>
+      <li><b>Analytics</b> — we run no Google Analytics, no analytics scripts, no advertising pixels and no third-party trackers of any kind.</li>
+      <li><b>Accounts</b> — there is no login, no email collection, no newsletter.</li>
+      <li><b>Cookies</b> — this site sets no cookies.</li>
+    </ul>
+
+    <h2>The one thing stored locally</h2>
+    <p>When you dismiss the cookie notice banner, your browser stores a small flag in <code>localStorage</code> (key <code>pdfsite-cookie-notice</code>) so the banner does not reappear. This value never leaves your device and can be cleared at any time through your browser settings.</p>
+    <p>The site also registers a service worker so the tools keep working offline. The service worker only caches this site's own static files (HTML, CSS, JavaScript libraries). It does not cache, log or transmit your documents.</p>
+
+    <h2>Hosting</h2>
+    <p>This site is hosted on Cloudflare Pages as static files. Like any web host, Cloudflare processes standard server logs (such as IP address and requested URL) as part of delivering the pages; we do not have access to any file you process here, because no file is ever sent to a server. Cloudflare acts as a data processor for visitors from the European Economic Area; see <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener noreferrer" target="_blank">Cloudflare's privacy policy</a> for details.</p>
+
+    <h2>Third-party services</h2>
+    <p>None. All code — including the PDF libraries (pdf-lib, pdf.js, JSZip) — is served from this domain. No external requests are made when you use a tool.</p>
+
+    <h2>Children's privacy</h2>
+    <p>The site collects no personal information from anyone, including children. There are no accounts and no data collection of any kind.</p>
+
+    <h2>Your rights (GDPR)</h2>
+    <p>Because we hold no personal data, there is nothing for us to access, export, correct or delete. If you believe otherwise, contact us and we will investigate immediately.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, the updated version will be published on this page with a new "last updated" date. Given the site's local-only design, material changes are unlikely.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about privacy or this policy: <a href="mailto:eyetoolkit@qq.com">eyetoolkit@qq.com</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="./">All tools</a>
+      <a href="privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/pdfsite.js"></script>
+<script>window.pdfsite.initCookieBar(); window.pdfsite.initSW();</script>
+</body>
+</html>

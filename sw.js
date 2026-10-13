@@ -1,6 +1,6 @@
 /* pdf.jsonversal.com — offline app shell cache.
    Caches only this site's own static assets. Never caches user files. */
-var CACHE = 'pdfsite-v1';
+var CACHE = 'pdfsite-v2';
 var ASSETS = [
   './',
   './privacy',
@@ -21,7 +21,15 @@ var ASSETS = [
   './tools/pdf-to-jpg',
   './tools/jpg-to-pdf',
   './tools/page-numbers',
-  './tools/extract-text'
+  './tools/extract-text',
+  './tools/pdf-to-png',
+  './tools/sign',
+  './tools/watermark',
+  './tools/extract-pages',
+  './tools/compare',
+  './tools/protect-unlock',
+  './tools/remove-metadata',
+  './tools/ocr'
 ];
 
 self.addEventListener('install', function (e) {

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protect / Unlock PDF — Password Encrypt PDF (Free, No Upload)</title>
+<meta name="description" content="Add an AES-256 password to your PDF or remove a password you know — entirely in your browser. Your file and password never leave your device. No signup, no watermark, no limits.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/protect-unlock">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Protect / Unlock PDF — free, in-browser, no upload">
+<meta property="og:description" content="Encrypt your PDF with AES-256 or remove a password you know — locally.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/protect-unlock">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Protect / Unlock PDF",
+  "url": "https://pdf.jsonversal.com/tools/protect-unlock",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Encrypt PDFs with AES-256 passwords or remove a known password, entirely in the browser with qpdf compiled to WebAssembly.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Protect PDF, password protect PDF, unlock PDF, remove PDF password, AES-256, permissions, no upload"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Protect / Unlock PDF", "item": "https://pdf.jsonversal.com/tools/protect-unlock" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Can you remove a password I forgot?", "acceptedAnswer": { "@type": "Answer", "text": "No. Removing a password requires knowing it — AES-256 encryption cannot be bypassed, and no honest tool claims otherwise. What this tool can do: remove a password you know, or strip permission-only restrictions (an owner password with no open password) from a file you own." } },
+    { "@type": "Question", "name": "What is the difference between user and owner password?", "acceptedAnswer": { "@type": "Answer", "text": "The user password is needed to open the file at all. The owner password gates permissions (printing, copying, editing). If you set only an owner password, anyone can read the document but respectful readers apply your restrictions." } },
+    { "@type": "Question", "name": "Is my password uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Encryption runs locally: qpdf, the open-source PDF engine, is compiled to WebAssembly and runs inside this tab. Neither the file nor the password is ever transmitted — you can verify this in your browser's network panel." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Protect / Unlock PDF</nav>
+  <section class="toolhead">
+    <h1>Protect / Unlock PDF</h1>
+    <p>Add an AES-256 password to your PDF, or remove a password you already know. Encryption runs inside this tab — your document and your password never leave your device.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">🔒</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">The file stays on your device.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · File status</h2>
+      <p class="hint" id="encStatus">Checking encryption…</p>
+
+      <div class="seg" id="puMode" style="margin-top:12px">
+        <button type="button" class="on" data-mode="protect">Protect (add password)</button>
+        <button type="button" data-mode="unlock">Unlock (remove password)</button>
+      </div>
+
+      <div id="mode-protect">
+        <div class="row gap-lg">
+          <div class="col">
+            <label class="field" for="userPw">Password to open the file</label>
+            <input type="password" id="userPw" autocomplete="new-password" placeholder="Leave empty for permissions only">
+          </div>
+          <div class="col">
+            <label class="field" for="ownerPw">Owner password (permissions)</label>
+            <input type="password" id="ownerPw" autocomplete="new-password" placeholder="Defaults to the open password">
+          </div>
+        </div>
+        <p class="hint">Store your password somewhere safe — it cannot be recovered.</p>
+        <div style="margin-top:10px">
+          <label class="field">Readers may…</label>
+          <div class="row gap-lg">
+            <div class="col"><label class="check"><input type="checkbox" id="pPrint" checked> Print</label></div>
+            <div class="col"><label class="check"><input type="checkbox" id="pCopy" checked> Copy text and images</label></div>
+            <div class="col"><label class="checkbox-inline"><input type="checkbox" id="pModify"> Modify contents</label></div>
+            <div class="col"><label class="check"><input type="checkbox" id="pAnnotate" checked> Add comments</label></div>
+          </div>
+        </div>
+        <p class="hint">Encryption strength: <b>AES-256 (R6)</b> — the current PDF standard, opened by Acrobat, Preview, Chrome, Firefox, Edge and phone viewers.</p>
+      </div>
+
+      <div id="mode-unlock" style="display:none">
+        <label class="field" for="unlockPw">Password the file currently opens with</label>
+        <input type="password" id="unlockPw" autocomplete="off">
+        <p class="hint">Leave empty to strip <b>permissions-only</b> restrictions (a file that opens without a password but is locked down). This is legitimate for files you own.</p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Protect PDF</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+    </div>
+  </section>
+
+  <div class="note warn">
+    <span class="ni">!</span>
+    <p><b>Not a password cracker.</b> Removing a password requires knowing it. If you forgot it, no tool can help — that is what makes the encryption worth using.</p>
+  </div>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> qpdf — the open-source engine used by countless server tools — is compiled to WebAssembly and runs in this tab. The file and every password stay in memory and vanish when you close the page. You can confirm zero network requests in your browser's dev tools.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to password-protect a PDF</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Enter a password to open the file (or leave it empty to set permissions only).</li>
+      <li>Optionally set an owner password and choose what readers may do: print, copy, modify, comment.</li>
+      <li>Click <b>Protect PDF</b> and download the encrypted copy.</li>
+    </ol>
+
+    <h2>How to unlock a PDF</h2>
+    <ol>
+      <li>Switch to <b>Unlock</b> mode.</li>
+      <li>Enter the password the file currently opens with — or leave it empty to strip permissions-only restrictions from a file you own.</li>
+      <li>Click <b>Unlock PDF</b> and download the password-free copy.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>AES-256 (R6) is the strongest encryption the PDF standard supports; every modern reader opens it.</li>
+      <li>Permission flags (no printing, no copying) are respected by well-behaved readers — the cryptographically enforced part is the open password.</li>
+      <li>This page loads a ~2&nbsp;MB encryption engine on first use, then works offline. Large files may take a few seconds.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Why encrypt locally instead of using an online service?</summary>
+        <p>Online encryptors receive both your document and your password — the two most sensitive things about the file. Here, neither ever leaves the tab. For documents protected precisely because they are sensitive, that difference is the whole point.</p>
+      </details>
+      <details>
+        <summary>I forgot my password — can you recover it?</summary>
+        <p>No. AES-256 cannot be bypassed, and this tool does not attempt it. Keep your original unprotected file until you have verified the password works.</p>
+      </details>
+      <details>
+        <summary>Can I re-protect with a different password?</summary>
+        <p>Yes — unlock with the current password first, then protect again with the new one.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="remove-metadata">Remove Metadata<span>Strip hidden properties</span></a>
+      <a href="sign">Sign PDF<span>Add your signature</span></a>
+      <a href="watermark">Watermark PDF<span>Mark ownership</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, baseName = 'document', opensWithoutPw = null, qpdf = null;
+  var mode = 'protect';
+
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var runBtn = document.getElementById('run');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  document.querySelectorAll('#puMode button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#puMode button').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      mode = b.getAttribute('data-mode');
+      document.getElementById('mode-protect').style.display = mode === 'protect' ? '' : 'none';
+      document.getElementById('mode-unlock').style.display = mode === 'unlock' ? '' : 'none';
+      runBtn.textContent = mode === 'protect' ? 'Protect PDF' : 'Unlock PDF';
+    });
+  });
+
+  function ensureQpdf() {
+    if (qpdf) return Promise.resolve(qpdf);
+    return P.loadQpdf().then(function (m) { qpdf = m; return m; });
+  }
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      opensWithoutPw = null;
+      document.getElementById('encStatus').textContent = 'Checking encryption…';
+      opts.style.display = '';
+      P.setStatus(status, 'Loading encryption engine…');
+      ensureQpdf().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        qpdf.FS.writeFile('/in.pdf', new Uint8Array(bytes));
+        // --show-encryption without a password: rc 0 = opens without password,
+        // rc != 0 = a user password is required to open the file.
+        var rc = qpdf.callMain(['--show-encryption', '/in.pdf']);
+        opensWithoutPw = (rc === 0);
+        var el = document.getElementById('encStatus');
+        if (opensWithoutPw) {
+          el.innerHTML = '🔓 This file <b>opens without a password</b>. If it carries owner restrictions, Unlock mode with an empty password strips them.';
+        } else {
+          el.innerHTML = '🔒 This file <b>needs a password to open</b>. Unlock it (with the password you know) before re-protecting.';
+        }
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not inspect this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; opensWithoutPw = null;
+    opts.style.display = 'none';
+    P.setStatus(status, '');
+  });
+
+  runBtn.addEventListener('click', function () {
+    if (!file) return;
+    runBtn.disabled = true;
+    P.setProgress(prog, 5);
+    P.setStatus(status, 'Loading encryption engine…');
+
+    var userPw = document.getElementById('userPw').value;
+    var ownerPw = document.getElementById('ownerPw').value || userPw;
+    var unlockPw = document.getElementById('unlockPw').value;
+
+    if (mode === 'protect' && !userPw && !ownerPw) {
+      P.toast('Set at least one password (open or owner)', true);
+      runBtn.disabled = false; return;
+    }
+
+    ensureQpdf().then(function () {
+      return P.readAsArrayBuffer(file);
+    }).then(function (bytes) {
+      qpdf.FS.writeFile('/in.pdf', new Uint8Array(bytes));
+      var args;
+      if (mode === 'protect') {
+        if (opensWithoutPw === false) throw new Error('This file already needs a password — unlock it first.');
+        args = ['--encrypt', userPw || '', ownerPw || '', '256'];
+        if (!document.getElementById('pPrint').checked) args.push('--print=none');
+        if (!document.getElementById('pModify').checked) args.push('--modify=none');
+        if (!document.getElementById('pCopy').checked) args.push('--extract=n');
+        if (!document.getElementById('pAnnotate').checked) args.push('--annotate=n');
+        args.push('--', '/in.pdf', '/out.pdf');
+      } else {
+        args = ['--password=' + unlockPw, '--decrypt', '/in.pdf', '/out.pdf'];
+      }
+      P.setStatus(status, mode === 'protect' ? 'Encrypting…' : 'Decrypting…');
+      P.setProgress(prog, 40);
+      var rc = qpdf.callMain(args);
+      if (rc !== 0) {
+        if (mode === 'unlock') {
+          throw new Error('Unlocking failed — wrong password? Check it and try again.');
+        }
+        if (opensWithoutPw === true) {
+          throw new Error('This file already carries encryption restrictions. Unlock it first (empty password), then protect again.');
+        }
+        throw new Error('qpdf failed (exit code ' + rc + ').');
+      }
+      P.setProgress(prog, 85);
+      var out = qpdf.FS.readFile('/out.pdf');
+      // verify: for unlock, output must open without a password
+      if (mode === 'unlock') {
+        qpdf.FS.writeFile('/verify.pdf', out);
+        var vrc = qpdf.callMain(['--show-encryption', '/verify.pdf']);
+        if (vrc !== 0) throw new Error('Verification failed — the output still needs a password.');
+      }
+      return new Blob([out], { type: 'application/pdf' });
+    }).then(function (blob) {
+      P.download(blob, mode === 'protect' ? baseName + '-protected.pdf' : baseName + '-unlocked.pdf');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast(mode === 'protect' ? 'PDF protected (AES-256)' : 'PDF unlocked');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Operation failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

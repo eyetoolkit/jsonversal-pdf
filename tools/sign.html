@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign PDF — Add a Signature to PDF Online (Free, No Upload)</title>
+<meta name="description" content="Draw, type or upload your signature and place it on any PDF page. Everything happens in your browser — your document and signature never leave your device. No signup, no watermark.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/sign">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Sign PDF — free, in-browser, no upload">
+<meta property="og:description" content="Add your signature to a PDF without uploading it anywhere.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/sign">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Sign PDF",
+  "url": "https://pdf.jsonversal.com/tools/sign",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Draw, type or upload a signature and stamp it onto PDF pages entirely in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Sign PDF, draw signature, typed signature, image signature, no upload, no watermark, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Sign PDF", "item": "https://pdf.jsonversal.com/tools/sign" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is an electronic signature legally valid?", "acceptedAnswer": { "@type": "Answer", "text": "This tool adds a picture of your signature, which is not a certified electronic signature under laws such as eIDAS, ESIGN or UETA. Those require identity verification and audit trails from a dedicated provider. For informal agreements, a pasted signature image is widely used — but for contracts that matter, use a compliant e-signature service." } },
+    { "@type": "Question", "name": "Does my signature get uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. You draw, type or pick your signature, and it is stamped into the PDF locally with pdf-lib. Nothing is transmitted anywhere." } },
+    { "@type": "Question", "name": "Can I sign on my phone?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The signature pad works with touch input, so you can sign with a finger or stylus on a phone or tablet." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Sign PDF</nav>
+  <section class="toolhead">
+    <h1>Sign PDF</h1>
+    <p>Draw, type or upload your signature and stamp it onto your document — without the document ever leaving your browser.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">✍️</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">The file stays on your device.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Create your signature</h2>
+      <div class="seg" id="sigMode">
+        <button type="button" class="on" data-mode="draw">Draw</button>
+        <button type="button" data-mode="type">Type</button>
+        <button type="button" data-mode="upload">Image</button>
+      </div>
+
+      <div id="mode-draw">
+        <p class="hint">Sign in the box below with your mouse, finger or stylus.</p>
+        <canvas id="pad" width="560" height="180" class="sigpad"></canvas>
+        <div class="btn-row">
+          <button class="ghost" id="padClear" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div id="mode-type" style="display:none">
+        <label class="field" for="sigText">Your name</label>
+        <input type="text" id="sigText" placeholder="Type your name" autocomplete="off">
+        <canvas id="padType" width="560" height="180" class="sigpad"></canvas>
+      </div>
+
+      <div id="mode-upload" style="display:none">
+        <label class="field" for="sigFile">Signature image (PNG or JPG, transparent background works best)</label>
+        <input type="file" id="sigFile" accept="image/png,image/jpeg">
+        <p class="hint" id="sigFileInfo">No image selected.</p>
+      </div>
+
+      <hr class="sep">
+      <h2>3 · Placement</h2>
+      <div class="row gap-lg">
+        <div class="col">
+          <label class="field" for="pos">Position on page</label>
+          <select id="pos">
+            <option value="br" selected>Bottom right</option>
+            <option value="bc">Bottom center</option>
+            <option value="bl">Bottom left</option>
+            <option value="tr">Top right</option>
+            <option value="tc">Top center</option>
+            <option value="tl">Top left</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="size">Signature size</label>
+          <select id="size">
+            <option value="0.16">Small</option>
+            <option value="0.22" selected>Medium</option>
+            <option value="0.3">Large</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <label class="field" for="pages">Pages to sign</label>
+        <input type="text" id="pages" placeholder="all" autocomplete="off">
+        <p class="hint" id="pageInfo"></p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Sign PDF</button>
+        <button class="ghost" id="clear" type="button">Start over</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+    </div>
+  </section>
+
+  <div class="note warn">
+    <span class="ni">!</span>
+    <p><b>Not a certified e-signature.</b> This stamps a picture of your signature — great for informal use. For legally binding signatures (eIDAS, ESIGN, UETA) with identity verification and audit trails, use a dedicated e-signature provider.</p>
+  </div>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> The signature is captured in this tab and stamped into the PDF with pdf-lib. Your document and your signature are never uploaded, watermarked or limited.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to sign a PDF</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Create your signature: <b>draw</b> it with the mouse or finger, <b>type</b> your name for a script-style rendering, or <b>upload</b> an image of your signature.</li>
+      <li>Choose where the signature goes (bottom right is the classic spot) and its size.</li>
+      <li>Pick which pages to sign, then click <b>Sign PDF</b> and download the result.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>The signature is added as an image on top of the page — the original text and layout are untouched.</li>
+      <li>Signing "all pages" stamps every page at the same position; use the page field (for example <code>1,3</code>) to sign only some.</li>
+      <li>The output is a standard PDF that opens anywhere, with no watermark.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Can I remove the signature afterwards?</summary>
+        <p>The signature is a normal image object inside the PDF, so a full PDF editor can remove it — just like a signature on paper can be crossed out. Keep your unsigned original until you are happy with the result.</p>
+      </details>
+      <details>
+        <summary>My PDF is rotated — where does the signature land?</summary>
+        <p>The position is calculated from the page's visible (rotated) dimensions, so "bottom right" stays bottom right on screen.</p>
+      </details>
+      <details>
+        <summary>Does this work on a phone?</summary>
+        <p>Yes. The drawing pad accepts touch input, so you can sign directly with a finger or stylus on a phone or tablet.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="watermark">Watermark PDF<span>Stamp text or logos</span></a>
+      <a href="page-numbers">Page Numbers<span>Number your pages</span></a>
+      <a href="protect-unlock">Protect PDF<span>Add a password</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pdfjsDoc = null, pageCount = 0, baseName = 'document';
+  var mode = 'draw';
+  var pad = document.getElementById('pad');
+  var padType = document.getElementById('padType');
+  var sigImage = null; // dataURL from draw/type/upload
+
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  /* ---------- signature capture ---------- */
+  function strokeCanvas(c, onDone) {
+    var ctx = c.getContext('2d');
+    var drawing = false, has = false;
+    ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#111';
+    function pos(e) {
+      var r = c.getBoundingClientRect();
+      var t = e.touches ? e.touches[0] : e;
+      return { x: (t.clientX - r.left) * (c.width / r.width), y: (t.clientY - r.top) * (c.height / r.height) };
+    }
+    function start(e) { e.preventDefault(); drawing = true; has = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+    function move(e) { if (!drawing) return; e.preventDefault(); var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    function end() { drawing = false; if (onDone) onDone(); }
+    c.addEventListener('mousedown', start); c.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    c.addEventListener('touchstart', start, { passive: false }); c.addEventListener('touchmove', move, { passive: false });
+    c.addEventListener('touchend', end);
+    c.__hasInk = function () { return has; };
+    c.__clear = function () { ctx.clearRect(0, 0, c.width, c.height); has = false; };
+    // test hook: programmatic stroke
+    c.__stroke = function (pts) {
+      has = true;
+      pts.forEach(function (p, i) { if (i === 0) { ctx.beginPath(); ctx.moveTo(p[0], p[1]); } else ctx.lineTo(p[0], p[1]); });
+      ctx.stroke();
+    };
+  }
+  strokeCanvas(pad);
+  strokeCanvas(padType);
+  document.getElementById('padClear').addEventListener('click', function () { pad.__clear(); });
+
+  // typed name -> script rendering on canvas
+  var typeTimer;
+  document.getElementById('sigText').addEventListener('input', function () {
+    clearTimeout(typeTimer);
+    typeTimer = setTimeout(function () {
+      var name = document.getElementById('sigText').value.trim();
+      var c = padType, ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+      if (!name) return;
+      ctx.fillStyle = '#111';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '56px "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive';
+      ctx.fillText(name, c.width / 2, c.height / 2);
+    }, 150);
+  });
+
+  document.getElementById('sigFile').addEventListener('change', function () {
+    var f = this.files && this.files[0];
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) { P.toast('Choose a PNG or JPG image', true); this.value = ''; return; }
+    var r = new FileReader();
+    r.onload = function () {
+      sigImage = { url: r.result, type: f.type === 'image/png' ? 'png' : 'jpg' };
+      document.getElementById('sigFileInfo').textContent = f.name + ' (' + P.fmtBytes(f.size) + ')';
+    };
+    r.readAsDataURL(f);
+  });
+
+  document.querySelectorAll('#sigMode button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#sigMode button').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      mode = b.getAttribute('data-mode');
+      document.getElementById('mode-draw').style.display = mode === 'draw' ? '' : 'none';
+      document.getElementById('mode-type').style.display = mode === 'type' ? '' : 'none';
+      document.getElementById('mode-upload').style.display = mode === 'upload' ? '' : 'none';
+    });
+  });
+
+  function getSignatureDataUrl() {
+    if (mode === 'draw') {
+      if (!pad.__hasInk()) throw new Error('Draw your signature first (or switch mode).');
+      return { url: pad.toDataURL('image/png'), type: 'png' };
+    }
+    if (mode === 'type') {
+      var name = document.getElementById('sigText').value.trim();
+      if (!name) throw new Error('Type your name first.');
+      return { url: padType.toDataURL('image/png'), type: 'png' };
+    }
+    if (!sigImage) throw new Error('Choose a signature image first.');
+    return sigImage;
+  }
+
+  /* ---------- pdf handling ---------- */
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      P.setStatus(status, 'Opening PDF…');
+      P.loadPdfjs().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        return pdfjsLib.getDocument({ data: bytes }).promise;
+      }).then(function (doc) {
+        pdfjsDoc = doc;
+        pageCount = doc.numPages;
+        document.getElementById('pageInfo').textContent =
+          f.name + ' has ' + pageCount + ' page' + (pageCount === 1 ? '' : 's') + '. Leave empty to sign every page.';
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; pdfjsDoc = null; pageCount = 0;
+    opts.style.display = 'none';
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!pdfjsDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    P.setProgress(prog, 5);
+    P.setStatus(status, 'Preparing signature…');
+
+    var sig;
+    try { sig = getSignatureDataUrl(); } catch (e) { P.toast(e.message, true); runBtn.disabled = false; return; }
+
+    var sel;
+    try {
+      var raw = document.getElementById('pages').value.trim();
+      sel = raw ? P.parseRanges(raw, pageCount) : null;
+    } catch (e) { P.toast(e.message, true); runBtn.disabled = false; return; }
+
+    var pos = document.getElementById('pos').value;
+    var frac = parseFloat(document.getElementById('size').value);
+    var list = sel || [];
+    if (!sel) { for (var i = 1; i <= pageCount; i++) list.push(i); }
+
+    P.readAsArrayBuffer(file).then(function (bytes) {
+      return PDFLib.PDFDocument.load(bytes);
+    }).then(function (doc) {
+      // pdf-lib accepts a data URL string (or bytes) for PNG/JPG embedding
+      return (sig.type === 'jpg' ? doc.embedJpg(sig.url) : doc.embedPng(sig.url)).then(function (embedded) {
+        var iw = embedded.width, ih = embedded.height;
+        list.forEach(function (pageNo) {
+          var page = doc.getPage(pageNo - 1);
+          var w = page.getWidth(), h = page.getHeight();
+          var dw = w * frac;
+          var dh = dw * (ih / iw);
+          if (dh > h * 0.4) { dh = h * 0.4; dw = dh * (iw / ih); }
+          var margin = Math.min(w, h) * 0.05;
+          var x, y;
+          if (pos === 'br') { x = w - dw - margin; y = margin; }
+          else if (pos === 'bc') { x = (w - dw) / 2; y = margin; }
+          else if (pos === 'bl') { x = margin; y = margin; }
+          else if (pos === 'tr') { x = w - dw - margin; y = h - dh - margin; }
+          else if (pos === 'tc') { x = (w - dw) / 2; y = h - dh - margin; }
+          else { x = margin; y = h - dh - margin; }
+          page.drawImage(embedded, { x: x, y: y, width: dw, height: dh });
+        });
+        return doc.save({ useObjectStreams: true });
+      });
+    }).then(function (out) {
+      P.download(new Blob([out], { type: 'application/pdf' }), baseName + '-signed.pdf');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Signed ' + list.length + ' page' + (list.length === 1 ? '' : 's'));
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Signing failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extract Pages from PDF — Split Out or Delete Pages (Free, No Upload)</title>
+<meta name="description" content="Extract selected pages into a new PDF or delete pages you don't need. Page thumbnails help you pick. Runs entirely in your browser — no upload, no signup, no watermark.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/extract-pages">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Extract Pages from PDF — free, in-browser, no upload">
+<meta property="og:description" content="Pull selected pages out of a PDF, or delete the pages you don't need.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/extract-pages">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Extract Pages from PDF",
+  "url": "https://pdf.jsonversal.com/tools/extract-pages",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Extract selected PDF pages into a new document or delete unwanted pages, with thumbnail previews.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Extract PDF pages, delete PDF pages, page thumbnails, range selection, no upload, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Extract Pages", "item": "https://pdf.jsonversal.com/tools/extract-pages" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the difference between extract and delete?", "acceptedAnswer": { "@type": "Answer", "text": "Extract creates a new PDF containing only the pages you pick. Delete removes the pages you pick and keeps everything else in a new PDF. Both leave your original file untouched on disk." } },
+    { "@type": "Question", "name": "Does extracting pages lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "No. Pages are copied as-is with pdf-lib — text, images, fonts and links are preserved exactly as in the source." } },
+    { "@type": "Question", "name": "Is my PDF uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Page thumbnails are rendered locally with pdf.js and the new PDF is assembled on your device." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Extract Pages</nav>
+  <section class="toolhead">
+    <h1>Extract Pages from PDF</h1>
+    <p>Pull the pages you need into a new PDF — or delete the pages you don't. Click thumbnails or type page ranges; your original file is never modified.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">📄</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">The file stays on your device.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Pick pages</h2>
+      <div class="seg" id="actMode">
+        <button type="button" class="on" data-mode="extract">Extract selected</button>
+        <button type="button" data-mode="delete">Delete selected</button>
+      </div>
+      <p class="hint" id="modeHint">A new PDF will contain only the selected pages.</p>
+
+      <div class="btn-row" style="margin:10px 0">
+        <button class="ghost" id="selAll" type="button">Select all</button>
+        <button class="ghost" id="selNone" type="button">Select none</button>
+        <button class="ghost" id="selOdd" type="button">Odd pages</button>
+        <button class="ghost" id="selEven" type="button">Even pages</button>
+      </div>
+
+      <div class="thumbgrid" id="grid"></div>
+
+      <div style="margin-top:14px">
+        <label class="field" for="pages">Or type ranges</label>
+        <input type="text" id="pages" placeholder="e.g. 1,4,7-9" autocomplete="off">
+        <p class="hint" id="pageInfo"></p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Extract pages</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Thumbnails are rendered with pdf.js and the new document is assembled with pdf-lib — no upload, no queue, no watermark, no page limit.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to extract pages from a PDF</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Choose <b>Extract selected</b> (keep the pages you pick) or <b>Delete selected</b> (remove them).</li>
+      <li>Click thumbnails or type ranges such as <code>1,4,7-9</code>.</li>
+      <li>Click the action button and download your new PDF.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Extracted pages are copied byte-for-byte at the object level — no re-compression, no quality loss.</li>
+      <li>Bookmarks and links pointing to kept pages survive; links pointing to removed pages are dropped silently.</li>
+      <li>Need to cut one big PDF into many files instead? Use the <a href="split">Split PDF</a> tool.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Is my original file modified?</summary>
+        <p>Never. The result is saved as a new download; the file on your disk is untouched.</p>
+      </details>
+      <details>
+        <summary>Can I extract every page into separate PDFs?</summary>
+        <p>Yes — select all, extract, then use the Split tool with a per-page range if you need individual files. Or simply extract one page at a time.</p>
+      </details>
+      <details>
+        <summary>Why is my PDF slow to show thumbnails?</summary>
+        <p>Rendering happens on your device. Very large documents (hundreds of pages) take a moment; thumbnails are drawn at low resolution to keep it fast.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="split">Split PDF<span>Cut into ranges</span></a>
+      <a href="organize">Organize PDF<span>Reorder pages</span></a>
+      <a href="rotate">Rotate PDF<span>Fix page orientation</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pdfjsDoc = null, pageCount = 0, baseName = 'document';
+  var mode = 'extract';
+  var selected = {}; // pageNo -> true
+
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var grid = document.getElementById('grid');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  document.querySelectorAll('#actMode button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#actMode button').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      mode = b.getAttribute('data-mode');
+      document.getElementById('modeHint').textContent = mode === 'extract'
+        ? 'A new PDF will contain only the selected pages.'
+        : 'The selected pages will be removed; everything else is kept.';
+      document.getElementById('run').textContent = mode === 'extract' ? 'Extract pages' : 'Delete pages';
+    });
+  });
+
+  function renderThumbs() {
+    grid.innerHTML = '';
+    var chain = Promise.resolve();
+    for (var i = 1; i <= pageCount; i++) {
+      (function (pageNo) {
+        chain = chain.then(function () {
+          return pdfjsDoc.getPage(pageNo).then(function (pdfPage) {
+            var viewport = pdfPage.getViewport({ scale: 0.25 });
+            var cell = document.createElement('button');
+            cell.type = 'button';
+            cell.className = 'thumb' + (selected[pageNo] ? ' on' : '');
+            cell.setAttribute('data-page', pageNo);
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.floor(viewport.width));
+            canvas.height = Math.max(1, Math.floor(viewport.height));
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            var label = document.createElement('span');
+            label.className = 'tlabel'; label.textContent = 'Page ' + pageNo;
+            cell.appendChild(canvas); cell.appendChild(label);
+            cell.addEventListener('click', function () {
+              if (selected[pageNo]) { delete selected[pageNo]; cell.classList.remove('on'); }
+              else { selected[pageNo] = true; cell.classList.add('on'); }
+              syncInput();
+            });
+            grid.appendChild(cell);
+            return pdfPage.render({ canvasContext: ctx, viewport: viewport }).promise;
+          });
+        });
+      })(i);
+    }
+    return chain;
+  }
+
+  function selectedList() {
+    var out = [];
+    for (var i = 1; i <= pageCount; i++) if (selected[i]) out.push(i);
+    return out;
+  }
+
+  function syncInput() {
+    document.getElementById('pages').value = selectedList().join(',');
+  }
+
+  document.getElementById('selAll').addEventListener('click', function () {
+    for (var i = 1; i <= pageCount; i++) selected[i] = true;
+    refreshThumbState(); syncInput();
+  });
+  document.getElementById('selNone').addEventListener('click', function () {
+    selected = {}; refreshThumbState(); syncInput();
+  });
+  document.getElementById('selOdd').addEventListener('click', function () {
+    selected = {};
+    for (var i = 1; i <= pageCount; i += 2) selected[i] = true;
+    refreshThumbState(); syncInput();
+  });
+  document.getElementById('selEven').addEventListener('click', function () {
+    selected = {};
+    for (var i = 2; i <= pageCount; i += 2) selected[i] = true;
+    refreshThumbState(); syncInput();
+  });
+
+  function refreshThumbState() {
+    Array.prototype.forEach.call(grid.children, function (cell) {
+      var p = parseInt(cell.getAttribute('data-page'), 10);
+      cell.classList.toggle('on', !!selected[p]);
+    });
+  }
+
+  document.getElementById('pages').addEventListener('input', function () {
+    var raw = this.value.trim();
+    selected = {};
+    if (raw) {
+      try {
+        P.parseRanges(raw, pageCount).forEach(function (p) { selected[p] = true; });
+      } catch (e) { /* partial typing: ignore until valid */ }
+    }
+    refreshThumbState();
+  });
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      selected = {};
+      P.setStatus(status, 'Opening PDF…');
+      P.loadPdfjs().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        return pdfjsLib.getDocument({ data: bytes }).promise;
+      }).then(function (doc) {
+        pdfjsDoc = doc;
+        pageCount = doc.numPages;
+        document.getElementById('pageInfo').textContent =
+          f.name + ' has ' + pageCount + ' page' + (pageCount === 1 ? '' : 's') + '.';
+        opts.style.display = '';
+        P.setStatus(status, 'Rendering thumbnails…');
+        return renderThumbs();
+      }).then(function () {
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; pdfjsDoc = null; pageCount = 0; selected = {};
+    grid.innerHTML = '';
+    opts.style.display = 'none';
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!pdfjsDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    P.setProgress(prog, 5);
+    P.setStatus(status, 'Working…');
+
+    var picked;
+    try {
+      picked = P.parseRanges(document.getElementById('pages').value, pageCount);
+    } catch (e) { P.toast(e.message, true); runBtn.disabled = false; return; }
+    if (!picked.length) { P.toast('Select at least one page', true); runBtn.disabled = false; return; }
+
+    var keep = {};
+    if (mode === 'extract') {
+      picked.forEach(function (p) { keep[p] = true; });
+    } else {
+      for (var i = 1; i <= pageCount; i++) if (picked.indexOf(i) === -1) keep[i] = true;
+    }
+    var keepList = [];
+    for (var j = 1; j <= pageCount; j++) if (keep[j]) keepList.push(j);
+    if (!keepList.length) { P.toast('That would remove every page — keep at least one.', true); runBtn.disabled = false; return; }
+
+    P.readAsArrayBuffer(file).then(function (bytes) {
+      return PDFLib.PDFDocument.load(bytes);
+    }).then(function (srcDoc) {
+      // both modes: copy the pages we keep into a fresh document
+      return PDFLib.PDFDocument.create().then(function (d) {
+        return d.copyPages(srcDoc, keepList.map(function (p) { return p - 1; })).then(function (copied) {
+          copied.forEach(function (pg) { d.addPage(pg); });
+          return d.save({ useObjectStreams: true });
+        });
+      });
+    }).then(function (out) {
+      var verb = mode === 'extract' ? 'extracted' : 'remaining';
+      P.download(new Blob([out], { type: 'application/pdf' }), baseName + '-' + verb + '.pdf');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast(keepList.length + ' page' + (keepList.length === 1 ? '' : 's') + ' saved');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Operation failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

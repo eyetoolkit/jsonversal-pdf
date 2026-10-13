@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OCR PDF — Convert Scanned PDF to Text (Free, No Upload)</title>
+<meta name="description" content="Turn scanned PDFs into selectable, searchable text with OCR that runs entirely in your browser. No upload, no signup, no watermark, no daily limits.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/ocr">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="OCR PDF — free, in-browser, no upload">
+<meta property="og:description" content="Recognize text in scanned PDFs — locally, with nothing uploaded.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/ocr">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "OCR PDF",
+  "url": "https://pdf.jsonversal.com/tools/ocr",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Recognize text in scanned PDF documents with in-browser OCR (tesseract.js), English language, with per-page progress.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "OCR PDF, scanned PDF to text, searchable PDF text, in-browser OCR, no upload, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "OCR PDF", "item": "https://pdf.jsonversal.com/tools/ocr" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How long does OCR take?", "acceptedAnswer": { "@type": "Answer", "text": "On a typical laptop, roughly half a second to a few seconds per page, depending on your device and how noisy the scan is. The first page also includes engine start-up of about a second. Progress is shown page by page." } },
+    { "@type": "Question", "name": "Which languages are supported?", "acceptedAnswer": { "@type": "Answer", "text": "English only for now. Other language packs are large downloads and are on the roadmap." } },
+    { "@type": "Question", "name": "Is my scanned document uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Pages are rendered locally with pdf.js and recognized by tesseract.js compiled to WebAssembly, running in your browser. Nothing is transmitted." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / OCR PDF</nav>
+  <section class="toolhead">
+    <h1>OCR PDF</h1>
+    <p>Turn scanned pages into selectable, searchable text. Recognition runs on your device — your documents are never uploaded anywhere.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">🔍</div>
+      <p><b>Drop a scanned PDF here</b> or click to choose</p>
+      <p class="hint">The file stays on your device.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Recognition settings</h2>
+      <div class="row gap-lg">
+        <div class="col">
+          <label class="field" for="scale">Render quality</label>
+          <select id="scale">
+            <option value="2.5">Higher (2.5×) — better accuracy, slower</option>
+            <option value="2" selected>Standard (2×)</option>
+            <option value="1.5">Faster (1.5×)</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="pages">Pages</label>
+          <input type="text" id="pages" placeholder="first 5" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" id="pageInfo"></p>
+      <p class="hint">Expect roughly <b>0.5–3 seconds per page</b> depending on your device and scan quality. English text is recognized; other languages are on the roadmap.</p>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Recognize text</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3>Done — text recognized</h3>
+        <div>
+          <span class="stat">Pages: <b id="r-count">–</b></span>
+          <span class="stat">Characters: <b id="r-chars">–</b></span>
+          <span class="stat">Time: <b id="r-time">–</b></span>
+        </div>
+        <div class="btn-row">
+          <button class="primary" id="r-dl" type="button">⬇ Download .txt</button>
+          <button class="ghost" id="r-copy" type="button">Copy to clipboard</button>
+        </div>
+        <textarea id="r-text" class="textout" rows="10" readonly placeholder="Recognized text appears here…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Pages are rendered with pdf.js and recognized by tesseract.js compiled to WebAssembly. The engine (~4 MB) is loaded once and cached; after that the tool works offline. Nothing is ever uploaded.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to OCR a scanned PDF</h2>
+    <ol>
+      <li>Drop your scanned PDF into the box above.</li>
+      <li>Choose render quality — higher is more accurate but slower.</li>
+      <li>Optionally limit pages (default: the first 5, since OCR takes a moment per page).</li>
+      <li>Click <b>Recognize text</b>, then copy the result or download it as a .txt file.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>OCR adds a <b>text copy</b> — it does not convert your scan into an editable Word document, and it does not modify the original PDF.</li>
+      <li>Already have a text layer? Use the <a href="extract-text">Extract Text</a> tool instead — it is instant and pixel-perfect.</li>
+      <li>Clean, high-contrast scans (300 dpi, straight pages) recognize best. Photos of screens or skewed pages reduce accuracy.</li>
+      <li>For best results on a long document, process it in batches of 10–20 pages.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Why is my PDF already selectable?</summary>
+        <p>Many "scanned" PDFs actually contain a hidden text layer from the original scanning software. Try selecting text with your cursor — if it works, use Extract Text and skip OCR entirely.</p>
+      </details>
+      <details>
+        <summary>Can I get a searchable PDF instead of a text file?</summary>
+        <p>Not with this tool — it produces a plain text copy. Creating an invisible text layer inside a PDF is a heavier operation that is on the roadmap.</p>
+      </details>
+      <details>
+        <summary>Does it work on my phone?</summary>
+        <p>Yes, though recognition is slower on mobile processors. Stick to small page batches.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="extract-text">Extract Text<span>Instant text from digital PDFs</span></a>
+      <a href="compare">Compare PDF<span>Diff two versions</span></a>
+      <a href="compress">Compress PDF<span>Shrink the source file</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pdfjsDoc = null, pageCount = 0, baseName = 'document';
+  var worker = null, lastText = '';
+
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      P.setStatus(status, 'Opening PDF…');
+      P.loadPdfjs().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        return pdfjsLib.getDocument({ data: bytes }).promise;
+      }).then(function (doc) {
+        pdfjsDoc = doc;
+        pageCount = doc.numPages;
+        document.getElementById('pageInfo').textContent =
+          f.name + ' has ' + pageCount + ' page' + (pageCount === 1 ? '' : 's') +
+          '. Default: first 5 pages. Use formats like 1,3,5-8.';
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; pdfjsDoc = null; pageCount = 0; lastText = '';
+    result.classList.remove('show');
+    opts.style.display = 'none';
+    P.setStatus(status, '');
+  });
+
+  function ensureWorker() {
+    if (worker) return Promise.resolve(worker);
+    return P.loadTesseract().then(function (Tesseract) {
+      return Tesseract.createWorker('eng', 1, {
+        workerPath: P.VENDOR + 'tesseract.worker.min.js',
+        corePath: P.VENDOR + 'tesseract-core-simd-lstm.wasm.js',
+        langPath: P.VENDOR,
+        logger: function () {}
+      });
+    }).then(function (w) { worker = w; return w; });
+  }
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!pdfjsDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    P.setProgress(prog, 2);
+    P.setStatus(status, 'Starting OCR engine…');
+
+    var sel;
+    try {
+      var raw = document.getElementById('pages').value.trim();
+      sel = raw ? P.parseRanges(raw, pageCount) : null;
+    } catch (e) { P.toast(e.message, true); runBtn.disabled = false; return; }
+
+    var list = sel || [];
+    if (!sel) { for (var i = 1; i <= Math.min(5, pageCount); i++) list.push(i); }
+    var scale = parseFloat(document.getElementById('scale').value);
+    var t0 = performance.now();
+    var texts = [];
+
+    ensureWorker().then(function () {
+      return list.reduce(function (chain, pageNo, k) {
+        return chain.then(function () {
+          P.setStatus(status, 'Recognizing page ' + pageNo + ' (' + (k + 1) + ' of ' + list.length + ')…');
+          P.setProgress(prog, (k / list.length) * 95);
+          return pdfjsDoc.getPage(pageNo).then(function (pdfPage) {
+            var viewport = pdfPage.getViewport({ scale: scale });
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.floor(viewport.width));
+            canvas.height = Math.max(1, Math.floor(viewport.height));
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            return pdfPage.render({ canvasContext: ctx, viewport: viewport }).promise.then(function () {
+              return canvas;
+            });
+          }).then(function (canvas) {
+            return worker.recognize(canvas);
+          }).then(function (res) {
+            texts.push('--- Page ' + pageNo + ' ---\n' + (res.data.text || '').trim());
+          });
+        });
+      }, Promise.resolve());
+    }).then(function () {
+      var elapsed = (performance.now() - t0) / 1000;
+      lastText = texts.join('\n\n') + '\n';
+      document.getElementById('r-count').textContent = list.length;
+      document.getElementById('r-chars').textContent = lastText.length;
+      document.getElementById('r-time').textContent = elapsed.toFixed(1) + 's';
+      document.getElementById('r-text').value = lastText;
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Recognized ' + list.length + ' page' + (list.length === 1 ? '' : 's'));
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'OCR failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  document.getElementById('r-dl').addEventListener('click', function () {
+    if (lastText) P.download(new Blob([lastText], { type: 'text/plain' }), baseName + '-ocr.txt');
+  });
+  document.getElementById('r-copy').addEventListener('click', function () {
+    if (!lastText) { P.toast('Nothing to copy', true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(function () { P.toast('Copied'); }, function () { P.toast('Copy failed', true); });
+    } else {
+      var ta = document.getElementById('r-text');
+      ta.select(); document.execCommand('copy');
+      P.toast('Copied');
+    }
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

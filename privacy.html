@@ -51,7 +51,7 @@
     <p>This site is hosted on Cloudflare Pages as static files. Like any web host, Cloudflare processes standard server logs (such as IP address and requested URL) as part of delivering the pages; we do not have access to any file you process here, because no file is ever sent to a server. Cloudflare acts as a data processor for visitors from the European Economic Area; see <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener noreferrer" target="_blank">Cloudflare's privacy policy</a> for details.</p>
 
     <h2>Third-party services</h2>
-    <p>None. All code — including the PDF libraries (pdf-lib, pdf.js, JSZip) — is served from this domain. No external requests are made when you use a tool.</p>
+    <p>None. All code — including the PDF libraries (pdf-lib, pdf.js, JSZip) — is served from this domain. A strict <b>Content-Security-Policy</b> header is sent with every page, which instructs your browser to refuse any script, style, font or connection that does not originate from this domain. If our hosting provider were to inject any analytics or tracking script into the HTML, your browser would block it from running — you can verify this in your browser's network panel: using a tool triggers zero requests to other domains.</p>
 
     <h2>Children's privacy</h2>
     <p>The site collects no personal information from anyone, including children. There are no accounts and no data collection of any kind.</p>

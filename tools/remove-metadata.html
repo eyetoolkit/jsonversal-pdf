@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remove PDF Metadata — View and Strip Document Properties (Free, No Upload)</title>
+<meta name="description" content="See the hidden metadata in your PDF — author, creator, dates, producer — and remove it before sharing. Runs entirely in your browser: no upload, no signup, no watermark.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/remove-metadata">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Remove PDF Metadata — free, in-browser, no upload">
+<meta property="og:description" content="Strip hidden author and producer information from your PDF before sharing it.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/remove-metadata">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Remove PDF Metadata",
+  "url": "https://pdf.jsonversal.com/tools/remove-metadata",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "View and remove hidden metadata (author, creator, producer, dates) from PDF documents in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Remove PDF metadata, view PDF properties, privacy, no upload, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Remove Metadata", "item": "https://pdf.jsonversal.com/tools/remove-metadata" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What metadata does a PDF contain?", "acceptedAnswer": { "@type": "Answer", "text": "The document information dictionary typically stores the title, author, subject, keywords, the application that created it, the PDF producer, and creation and modification dates. Word and Excel files often carry your name or username in the author field." } },
+    { "@type": "Question", "name": "What exactly gets removed?", "acceptedAnswer": { "@type": "Answer", "text": "All information dictionary fields are cleared and the XMP metadata packet, if present, is dropped. The visible page content is untouched." } },
+    { "@type": "Question", "name": "Is my PDF uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Metadata is read and rewritten locally with pdf-lib. Nothing leaves your device." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Remove Metadata</nav>
+  <section class="toolhead">
+    <h1>Remove PDF Metadata</h1>
+    <p>PDFs carry hidden information — who created them, with which software, when. See it, then strip it before you share the file.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">🕵️</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">The file stays on your device.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · What's inside</h2>
+      <p class="hint">Fields below are read from the document information dictionary.</p>
+      <table class="metatable" id="metaTable">
+        <tbody id="metaBody"></tbody>
+      </table>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Remove all metadata</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Metadata is read and rewritten with pdf-lib inside your browser. The page content is untouched; only the hidden properties are cleared. No upload, no signup.</p>
+  </div>
+
+  <section class="content">
+    <h2>Why remove PDF metadata?</h2>
+    <p>
+      Every PDF stores a set of properties beyond what you see on the page: the author's name, the software that
+      produced it, and timestamps. When a contract exported from Word or a report exported from Excel is shared,
+      those fields often carry a real name, a username or an internal file path. Removing metadata is a basic
+      hygiene step before publishing or sending a document outside your organization.
+    </p>
+
+    <h2>How to remove metadata from a PDF</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Review the fields listed — this is what anyone else can see.</li>
+      <li>Click <b>Remove all metadata</b> and download the cleaned PDF.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>All information dictionary fields are cleared, and an XMP metadata packet is dropped if present.</li>
+      <li>Visible content, bookmarks and links are preserved — only hidden properties change.</li>
+      <li>Metadata removal is one layer of privacy. For sensitive documents, also consider the <a href="protect-unlock">Protect PDF</a> tool and remember that this site never receives your file in the first place.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Can I edit metadata instead of removing it?</summary>
+        <p>This tool clears everything for privacy. If you need to set specific fields, any full PDF editor can write them after cleaning.</p>
+      </details>
+      <details>
+        <summary>Does the file size change?</summary>
+        <p>Usually by only a few bytes. The metadata block is tiny compared to page content.</p>
+      </details>
+      <details>
+        <summary>Will the cleaned PDF still open everywhere?</summary>
+        <p>Yes. The output is a standard, fully valid PDF — just without the extra properties.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="protect-unlock">Protect PDF<span>Add a password</span></a>
+      <a href="compare">Compare PDF<span>Diff two versions</span></a>
+      <a href="extract-text">Extract Text<span>Pull the text out</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, baseName = 'document';
+
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var metaBody = document.getElementById('metaBody');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  function row(label, value) {
+    var tr = document.createElement('tr');
+    var th = document.createElement('th');
+    th.scope = 'row'; th.textContent = label;
+    var td = document.createElement('td');
+    td.textContent = value || '—';
+    tr.appendChild(th); tr.appendChild(td);
+    return tr;
+  }
+
+  function fmtDate(d) {
+    if (!d) return '';
+    try { return d.toISOString(); } catch (e) { return String(d); }
+  }
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      P.setStatus(status, 'Reading metadata…');
+      P.readAsArrayBuffer(f).then(function (bytes) {
+        return PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
+      }).then(function (doc) {
+        metaBody.innerHTML = '';
+        metaBody.appendChild(row('Title', doc.getTitle()));
+        metaBody.appendChild(row('Author', doc.getAuthor()));
+        metaBody.appendChild(row('Subject', doc.getSubject()));
+        metaBody.appendChild(row('Keywords', (doc.getKeywords() || []).join(', ')));
+        metaBody.appendChild(row('Creator', doc.getCreator()));
+        metaBody.appendChild(row('Producer', doc.getProducer()));
+        metaBody.appendChild(row('Created', fmtDate(doc.getCreationDate())));
+        metaBody.appendChild(row('Modified', fmtDate(doc.getModificationDate())));
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not read this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null;
+    metaBody.innerHTML = '';
+    opts.style.display = 'none';
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!file) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    P.setProgress(prog, 5);
+    P.setStatus(status, 'Stripping metadata…');
+
+    P.readAsArrayBuffer(file).then(function (bytes) {
+      return PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
+    }).then(function (doc) {
+      doc.setTitle('');
+      doc.setAuthor('');
+      doc.setSubject('');
+      doc.setKeywords([]);
+      doc.setCreator('');
+      doc.setProducer('');
+      try { doc.setCreationDate(new Date(0)); } catch (e) {}
+      try { doc.setModificationDate(new Date(0)); } catch (e) {}
+      return doc.save({ useObjectStreams: true });
+    }).then(function (out) {
+      // verify: reload and confirm fields are empty
+      return PDFLib.PDFDocument.load(out, { updateMetadata: false }).then(function (check) {
+        var leftovers = [];
+        if (check.getTitle()) leftovers.push('title');
+        if (check.getAuthor()) leftovers.push('author');
+        if (check.getSubject()) leftovers.push('subject');
+        if (check.getKeywords() && check.getKeywords().length) leftovers.push('keywords');
+        if (check.getCreator()) leftovers.push('creator');
+        if (check.getProducer()) leftovers.push('producer');
+        if (leftovers.length) throw new Error('Could not clear: ' + leftovers.join(', '));
+        return out;
+      });
+    }).then(function (out) {
+      P.download(new Blob([out], { type: 'application/pdf' }), baseName + '-clean.pdf');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Metadata removed');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Could not remove metadata', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

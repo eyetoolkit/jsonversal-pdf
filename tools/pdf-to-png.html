@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF to PNG — Convert PDF Pages to PNG or WebP (Free, No Upload)</title>
+<meta name="description" content="Turn every PDF page into a lossless PNG or compact WebP image in your browser. Choose resolution, download individually or as ZIP. No upload, no signup, no watermark.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/pdf-to-png">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="PDF to PNG — free, in-browser, no upload">
+<meta property="og:description" content="Turn PDF pages into PNG or WebP images, entirely in your browser.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/pdf-to-png">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PDF to PNG",
+  "url": "https://pdf.jsonversal.com/tools/pdf-to-png",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Convert PDF pages to lossless PNG or compact WebP images in the browser with selectable resolution.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "PDF to PNG, PDF to WebP, page export, ZIP download, no upload, no watermark, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "PDF to PNG", "item": "https://pdf.jsonversal.com/tools/pdf-to-png" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Should I choose PNG or WebP?", "acceptedAnswer": { "@type": "Answer", "text": "PNG is universally compatible and lossless — every editor and operating system opens it. WebP produces files roughly 25-35% smaller at similar quality, which is better for websites. For documents with text, either format at 2x resolution stays sharp." } },
+    { "@type": "Question", "name": "Are the images transparent?", "acceptedAnswer": { "@type": "Answer", "text": "No. Pages are rendered on a white background, matching how the PDF looks when printed. PDF pages themselves are opaque documents." } },
+    { "@type": "Question", "name": "Is my PDF uploaded during conversion?", "acceptedAnswer": { "@type": "Answer", "text": "No. Pages are rendered to images locally with pdf.js and encoded on your device. Nothing leaves your browser." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / PDF to PNG</nav>
+  <section class="toolhead">
+    <h1>PDF to PNG</h1>
+    <p>Convert each page of a PDF into a crisp PNG or WebP image. Pick the resolution, download single pages or everything as a ZIP — all inside your browser.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">🖼️</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">Pages are rendered locally — nothing is uploaded.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Image settings</h2>
+      <div class="row gap-lg">
+        <div class="col">
+          <label class="field" for="format">Image format</label>
+          <select id="format">
+            <option value="png" selected>PNG — lossless, universal</option>
+            <option value="webp">WebP — ~30% smaller files</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="scale">Resolution</label>
+          <select id="scale">
+            <option value="3">Very high (3×) — print</option>
+            <option value="2" selected>High (2×) — print &amp; screen</option>
+            <option value="1.5">Medium (1.5×)</option>
+            <option value="1">Screen (1×)</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <label class="field" for="pages">Pages</label>
+        <input type="text" id="pages" placeholder="all" autocomplete="off">
+        <p class="hint" id="pageInfo"></p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Convert to image</button>
+        <button class="ghost" id="clear" type="button">Choose another file</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+
+      <div class="result" id="result">
+        <h3>Done — images ready</h3>
+        <div>
+          <span class="stat">Images: <b id="r-count">–</b></span>
+          <span class="stat">Total size: <b id="r-size">–</b></span>
+        </div>
+        <div class="dl-row" id="r-links"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Each page is rendered in your browser with pdf.js and encoded as an image on your device. No upload, no queue, no watermark, no daily limit.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to convert a PDF to PNG</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Choose PNG (lossless) or WebP (smaller files) and a resolution: 2× gives roughly 1650×2330 pixels per A4 page.</li>
+      <li>Optionally limit which pages to convert (for example <code>1,4,7</code>).</li>
+      <li>Click <b>Convert to image</b>, then download pages individually or all at once as a ZIP.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Text in the images is <b>not selectable</b> — it is a picture of the page, exactly like a photo of a document.</li>
+      <li>White page backgrounds are preserved (rendered on white, not transparent).</li>
+      <li>Prefer smaller files for email? WebP at 2× is usually 25–35% smaller than PNG at the same resolution.</li>
+      <li>Need the text instead? Use the <a href="extract-text">Extract Text</a> tool, which keeps words as words.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>PNG or JPG — which should I use?</summary>
+        <p>PNG is lossless, so text and line art stay perfectly sharp; files are larger. JPG compresses more and can blur fine text. If you are unsure, pick PNG. The <a href="pdf-to-jpg">PDF to JPG</a> tool is one click away if you want smaller files.</p>
+      </details>
+      <details>
+        <summary>My PDF has 300 pages — will this work?</summary>
+        <p>Yes, but be patient: rendering happens on your device, so hundreds of pages take a while and use memory. Convert in batches with the page selector if needed.</p>
+      </details>
+      <details>
+        <summary>Are the images watermarked?</summary>
+        <p>Never. The output is a plain image of your page with nothing added.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="pdf-to-jpg">PDF to JPG<span>Smaller JPG images</span></a>
+      <a href="jpg-to-pdf">JPG to PDF<span>Images back into a document</span></a>
+      <a href="compress">Compress PDF<span>Shrink the source file</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pdfjsDoc = null, pageCount = 0, baseName = 'document';
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var result = document.getElementById('result');
+  var rLinks = document.getElementById('r-links');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      P.setStatus(status, 'Opening PDF…');
+      P.loadPdfjs().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        return pdfjsLib.getDocument({ data: bytes }).promise;
+      }).then(function (doc) {
+        pdfjsDoc = doc;
+        pageCount = doc.numPages;
+        document.getElementById('pageInfo').textContent =
+          f.name + ' has ' + pageCount + ' page' + (pageCount === 1 ? '' : 's') + '. Leave empty for all pages.';
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; pdfjsDoc = null; pageCount = 0;
+    opts.style.display = 'none'; result.classList.remove('show');
+    P.setStatus(status, '');
+  });
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!pdfjsDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    result.classList.remove('show');
+    rLinks.innerHTML = '';
+    P.setProgress(prog, 3);
+
+    var sel;
+    try {
+      var raw = document.getElementById('pages').value.trim();
+      sel = raw ? P.parseRanges(raw, pageCount) : null;
+    } catch (e) { P.toast(e.message, true); runBtn.disabled = false; return; }
+
+    var format = document.getElementById('format').value; // png | webp
+    var mime = format === 'webp' ? 'image/webp' : 'image/png';
+    var scale = parseFloat(document.getElementById('scale').value);
+    var out = [];
+    var total = 0;
+
+    var list = sel || [];
+    if (!sel) { for (var i = 1; i <= pageCount; i++) list.push(i); }
+
+    list.reduce(function (chain, pageNo, k) {
+      return chain.then(function () {
+        P.setStatus(status, 'Rendering page ' + pageNo + ' of ' + pageCount + '…');
+        P.setProgress(prog, (k / list.length) * 95);
+        return pdfjsDoc.getPage(pageNo).then(function (pdfPage) {
+          var viewport = pdfPage.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.floor(viewport.width));
+          canvas.height = Math.max(1, Math.floor(viewport.height));
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          return pdfPage.render({ canvasContext: ctx, viewport: viewport }).promise.then(function () {
+            return new Promise(function (resolve) {
+              canvas.toBlob(function (blob) { resolve(blob); }, mime, format === 'webp' ? 0.92 : undefined);
+            });
+          });
+        }).then(function (blob) {
+          total += blob.size;
+          out.push({ name: baseName + '-page-' + pageNo + '.' + format, blob: blob });
+        });
+      });
+    }, Promise.resolve()).then(function () {
+      document.getElementById('r-count').textContent = out.length;
+      document.getElementById('r-size').textContent = P.fmtBytes(total);
+      out.forEach(function (f) {
+        var b = document.createElement('button');
+        b.className = 'dlbtn'; b.type = 'button'; b.textContent = '⬇ ' + f.name;
+        b.addEventListener('click', function () { P.download(f.blob, f.name); });
+        rLinks.appendChild(b);
+      });
+      if (out.length > 1) {
+        var zip = document.createElement('button');
+        zip.className = 'dlbtn primary'; zip.type = 'button';
+        zip.textContent = '⬇ Download all as ZIP';
+        zip.addEventListener('click', function () {
+          P.setStatus(status, 'Packing ZIP…');
+          P.loadJSZip().then(function (JSZip) {
+            var z = new JSZip();
+            out.forEach(function (f) { z.file(f.name, f.blob); });
+            return z.generateAsync({ type: 'blob' });
+          }).then(function (blob) {
+            P.download(blob, baseName + '-' + format + '.zip');
+            P.setStatus(status, '');
+          }).catch(function () { P.toast('ZIP packing failed', true); });
+        });
+        rLinks.appendChild(zip);
+      }
+      result.classList.add('show');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Converted ' + out.length + ' page' + (out.length === 1 ? '' : 's'));
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Conversion failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

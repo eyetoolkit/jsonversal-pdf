@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watermark PDF — Add Text or Image Watermark (Free, No Upload)</title>
+<meta name="description" content="Stamp a text or image watermark on every page of your PDF. Adjust opacity, angle, size and tiling. Everything runs in your browser — no upload, no signup, no watermark added by us.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/watermark">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Watermark PDF — free, in-browser, no upload">
+<meta property="og:description" content="Add a text or image watermark to your PDF without uploading it.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/watermark">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Watermark PDF",
+  "url": "https://pdf.jsonversal.com/tools/watermark",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Add text or image watermarks to PDF pages in the browser with adjustable opacity, rotation and tiling.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Watermark PDF, text watermark, image watermark, tiled watermark, opacity control, no upload, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Watermark PDF", "item": "https://pdf.jsonversal.com/tools/watermark" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Can I remove a watermark later?", "acceptedAnswer": { "@type": "Answer", "text": "The watermark is drawn on top of the page content. A full PDF editor can usually delete it as an object, just like any other overlay. Keep your original file until the result is what you want." } },
+    { "@type": "Question", "name": "Does the watermark protect my document from copying?", "acceptedAnswer": { "@type": "Answer", "text": "No. A visible watermark deters casual reuse and marks ownership, but anyone can still copy the underlying text. For real protection, combine this with the Protect PDF tool (password and permission flags)." } },
+    { "@type": "Question", "name": "Is my PDF uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. The watermark is stamped locally with pdf-lib and nothing leaves your device." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Watermark PDF</nav>
+  <section class="toolhead">
+    <h1>Watermark PDF</h1>
+    <p>Stamp a text or image watermark across your document — a single mark or a repeating pattern, at any opacity and angle.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add your PDF</h2>
+    <div class="dropzone" id="dz">
+      <div class="dz-icon">💧</div>
+      <p><b>Drop a PDF here</b> or click to choose</p>
+      <p class="hint">The file stays on your device.</p>
+    </div>
+
+    <div id="opts" style="display:none">
+      <hr class="sep">
+      <h2>2 · Watermark</h2>
+      <div class="seg" id="wmMode">
+        <button type="button" class="on" data-mode="text">Text</button>
+        <button type="button" data-mode="image">Image</button>
+      </div>
+
+      <div id="wm-text">
+        <div class="row gap-lg">
+          <div class="col">
+            <label class="field" for="wmText">Watermark text</label>
+            <input type="text" id="wmText" value="CONFIDENTIAL" autocomplete="off">
+          </div>
+          <div class="col">
+            <label class="field" for="wmColor">Color</label>
+            <select id="wmColor">
+              <option value="#888888" selected>Gray</option>
+              <option value="#cc0000">Red</option>
+              <option value="#000000">Black</option>
+              <option value="#0000cc">Blue</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="wm-image" style="display:none">
+        <label class="field" for="wmFile">Watermark image (PNG or JPG)</label>
+        <input type="file" id="wmFile" accept="image/png,image/jpeg">
+        <p class="hint" id="wmFileInfo">No image selected.</p>
+      </div>
+
+      <div class="row gap-lg" style="margin-top:14px">
+        <div class="col">
+          <label class="field" for="wmLayout">Layout</label>
+          <select id="wmLayout">
+            <option value="tile" selected>Repeat across page</option>
+            <option value="center">One in the center</option>
+            <option value="br">One, bottom right</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="wmAngle">Angle</label>
+          <select id="wmAngle">
+            <option value="-45" selected>Diagonal (−45°)</option>
+            <option value="0">Horizontal</option>
+            <option value="-90">Vertical (−90°)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row gap-lg" style="margin-top:14px">
+        <div class="col">
+          <label class="field" for="wmOpacity">Opacity</label>
+          <select id="wmOpacity">
+            <option value="0.1">Very light (10%)</option>
+            <option value="0.18" selected>Light (18%)</option>
+            <option value="0.3">Medium (30%)</option>
+            <option value="0.5">Strong (50%)</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field" for="wmScale">Size</label>
+          <select id="wmScale">
+            <option value="0.5">Small</option>
+            <option value="0.75" selected>Medium</option>
+            <option value="1">Large</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <label class="field" for="pages">Pages</label>
+        <input type="text" id="pages" placeholder="all" autocomplete="off">
+        <p class="hint" id="pageInfo"></p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="primary" id="run" type="button">Add watermark</button>
+        <button class="ghost" id="clear" type="button">Start over</button>
+      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="statusline" id="status"></div>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> The watermark is stamped onto each page with pdf-lib inside your browser. No upload, no queue, no limits — and we add no watermark of our own.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to watermark a PDF</h2>
+    <ol>
+      <li>Drop your PDF into the box above.</li>
+      <li>Pick <b>Text</b> (type your wording, for example DRAFT or CONFIDENTIAL) or <b>Image</b> (a logo PNG works great).</li>
+      <li>Choose the layout: a repeating pattern, one centered mark, or a corner stamp. Set the angle, opacity and size.</li>
+      <li>Click <b>Add watermark</b> and download the result.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Light opacity (10–20%) marks ownership while keeping the document fully readable.</li>
+      <li>The diagonal repeating pattern is the classic "confidential document" look and is hard to crop out.</li>
+      <li>Watermarks are drawn over the content — the original text underneath is untouched.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Can I watermark only some pages?</summary>
+        <p>Yes — enter page numbers or ranges such as <code>2,5,8-10</code> in the Pages field. Leave it empty to mark every page.</p>
+      </details>
+      <details>
+        <summary>Will the watermark show when printed?</summary>
+        <p>Yes. The watermark is part of the page content, so it prints exactly like anything else on the page.</p>
+      </details>
+      <details>
+        <summary>Can I use my company logo?</summary>
+        <p>Switch to Image mode and upload a PNG or JPG. Transparent PNGs blend best with the page.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="sign">Sign PDF<span>Add your signature</span></a>
+      <a href="protect-unlock">Protect PDF<span>Password and permissions</span></a>
+      <a href="page-numbers">Page Numbers<span>Number your pages</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/vendor/pdf-lib.min.js"></script>
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var file = null, pdfjsDoc = null, pageCount = 0, baseName = 'document';
+  var mode = 'text';
+  var wmImage = null; // { url, type }
+
+  var dz = document.getElementById('dz');
+  var opts = document.getElementById('opts');
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  document.querySelectorAll('#wmMode button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#wmMode button').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      mode = b.getAttribute('data-mode');
+      document.getElementById('wm-text').style.display = mode === 'text' ? '' : 'none';
+      document.getElementById('wm-image').style.display = mode === 'image' ? '' : 'none';
+    });
+  });
+
+  document.getElementById('wmFile').addEventListener('change', function () {
+    var f = this.files && this.files[0];
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) { P.toast('Choose a PNG or JPG image', true); this.value = ''; return; }
+    var r = new FileReader();
+    r.onload = function () {
+      wmImage = { url: r.result, type: f.type === 'image/png' ? 'png' : 'jpg' };
+      document.getElementById('wmFileInfo').textContent = f.name + ' (' + P.fmtBytes(f.size) + ')';
+    };
+    r.readAsDataURL(f);
+  });
+
+  P.makeDropzone(dz, {
+    multiple: false,
+    onFiles: function (fs) {
+      var f = fs[0];
+      if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+      file = f;
+      baseName = f.name.replace(/\.pdf$/i, '') || 'document';
+      P.setStatus(status, 'Opening PDF…');
+      P.loadPdfjs().then(function () {
+        return P.readAsArrayBuffer(f);
+      }).then(function (bytes) {
+        return pdfjsLib.getDocument({ data: bytes }).promise;
+      }).then(function (doc) {
+        pdfjsDoc = doc;
+        pageCount = doc.numPages;
+        document.getElementById('pageInfo').textContent =
+          f.name + ' has ' + pageCount + ' page' + (pageCount === 1 ? '' : 's') + '. Leave empty for all pages.';
+        opts.style.display = '';
+        P.setStatus(status, '');
+      }).catch(function (e) {
+        P.setStatus(status, '');
+        P.toast(e.message || 'Could not open this PDF', true);
+      });
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    file = null; pdfjsDoc = null; pageCount = 0;
+    opts.style.display = 'none';
+    P.setStatus(status, '');
+  });
+
+  function hexToRgb(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(hex);
+    if (!m) return { r: 0.5, g: 0.5, b: 0.5 };
+    var v = parseInt(m[1], 16);
+    return { r: ((v >> 16) & 255) / 255, g: ((v >> 8) & 255) / 255, b: (v & 255) / 255 };
+  }
+
+  document.getElementById('run').addEventListener('click', function () {
+    if (!pdfjsDoc) return;
+    var runBtn = this;
+    runBtn.disabled = true;
+    P.setProgress(prog, 5);
+    P.setStatus(status, 'Preparing watermark…');
+
+    if (mode === 'text') {
+      var t = document.getElementById('wmText').value.trim();
+      if (!t) { P.toast('Enter watermark text', true); runBtn.disabled = false; return; }
+    } else if (!wmImage) {
+      P.toast('Choose a watermark image', true); runBtn.disabled = false; return;
+    }
+
+    var sel;
+    try {
+      var raw = document.getElementById('pages').value.trim();
+      sel = raw ? P.parseRanges(raw, pageCount) : null;
+    } catch (e) { P.toast(e.message, true); runBtn.disabled = false; return; }
+
+    var layout = document.getElementById('wmLayout').value;
+    var angle = parseFloat(document.getElementById('wmAngle').value);
+    var opacity = parseFloat(document.getElementById('wmOpacity').value);
+    var scale = parseFloat(document.getElementById('wmScale').value);
+    var list = sel || [];
+    if (!sel) { for (var i = 1; i <= pageCount; i++) list.push(i); }
+
+    P.readAsArrayBuffer(file).then(function (bytes) {
+      return PDFLib.PDFDocument.load(bytes);
+    }).then(function (doc) {
+      var prep;
+      if (mode === 'text') {
+        prep = doc.embedFont(PDFLib.StandardFonts.HelveticaBold).then(function (font) {
+          var text = document.getElementById('wmText').value.trim();
+          var color = hexToRgb(document.getElementById('wmColor').value);
+          return { kind: 'text', font: font, text: text, color: color };
+        });
+      } else {
+        // pdf-lib accepts a data URL string (or bytes) for PNG/JPG embedding
+        prep = (wmImage.type === 'jpg' ? doc.embedJpg(wmImage.url) : doc.embedPng(wmImage.url)).then(function (embedded) {
+          return { kind: 'image', img: embedded };
+        });
+      }
+
+      return prep.then(function (mark) {
+        // pdf-lib rotate expects a Rotation value: degrees(angle), not radians
+        var rot = PDFLib.degrees(angle);
+        list.forEach(function (pageNo) {
+          var page = doc.getPage(pageNo - 1);
+          var w = page.getWidth(), h = page.getHeight();
+          var unit = Math.min(w, h);
+
+          if (mark.kind === 'text') {
+            var fontSize = unit * 0.12 * scale;
+            var tw = mark.font.widthOfTextAtSize(mark.text, fontSize);
+            var positions = [];
+            if (layout === 'tile') {
+              var stepX = tw + unit * 0.35;
+              var stepY = fontSize * 3.2;
+              for (var y = h - fontSize; y > -fontSize; y -= stepY) {
+                for (var x = -stepX; x < w + tw; x += stepX) {
+                  positions.push({ x: x, y: y });
+                }
+              }
+            } else if (layout === 'center') {
+              positions.push({ x: (w - tw) / 2, y: (h - fontSize) / 2 });
+            } else {
+              positions.push({ x: w - tw - unit * 0.06, y: unit * 0.06 });
+            }
+            var rgb = PDFLib.rgb(mark.color.r, mark.color.g, mark.color.b);
+            positions.forEach(function (p) {
+              page.drawText(mark.text, {
+                x: p.x, y: p.y, size: fontSize, font: mark.font,
+                color: rgb, opacity: opacity, rotate: rot
+              });
+            });
+          } else {
+            var iw = mark.img.width, ih = mark.img.height;
+            var dw = unit * 0.3 * scale;
+            var dh = dw * (ih / iw);
+            var spots = [];
+            if (layout === 'tile') {
+              var sx = dw + unit * 0.25;
+              var sy = dh + unit * 0.3;
+              for (var yy = h - sy; yy > -sy; yy -= sy) {
+                for (var xx = -sx; xx < w + sx; xx += sx) {
+                  spots.push({ x: xx, y: yy });
+                }
+              }
+            } else if (layout === 'center') {
+              spots.push({ x: (w - dw) / 2, y: (h - dh) / 2 });
+            } else {
+              spots.push({ x: w - dw - unit * 0.06, y: unit * 0.06 });
+            }
+            spots.forEach(function (p) {
+              page.drawImage(mark.img, {
+                x: p.x, y: p.y, width: dw, height: dh,
+                opacity: opacity, rotate: rot
+              });
+            });
+          }
+        });
+        return doc.save({ useObjectStreams: true });
+      });
+    }).then(function (out) {
+      P.download(new Blob([out], { type: 'application/pdf' }), baseName + '-watermarked.pdf');
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast('Watermarked ' + list.length + ' page' + (list.length === 1 ? '' : 's'));
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Watermarking failed', true);
+    }).then(function () { runBtn.disabled = false; });
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare PDF — Diff Two PDF Documents (Free, No Upload)</title>
+<meta name="description" content="Compare two versions of a PDF and see exactly what changed, page by page and line by line. Text-level diff runs entirely in your browser — no upload, no signup.">
+<link rel="canonical" href="https://pdf.jsonversal.com/tools/compare">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:title" content="Compare PDF — free, in-browser, no upload">
+<meta property="og:description" content="See what changed between two versions of a PDF document.">
+<meta property="og:url" content="https://pdf.jsonversal.com/tools/compare">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Compare PDF",
+  "url": "https://pdf.jsonversal.com/tools/compare",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Compare two PDF documents page by page with a line-level text diff, entirely in the browser.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Compare PDF, PDF diff, document comparison, text diff, no upload, unlimited"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "All tools", "item": "https://pdf.jsonversal.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare PDF", "item": "https://pdf.jsonversal.com/tools/compare" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What kind of differences does this detect?", "acceptedAnswer": { "@type": "Answer", "text": "It compares the text of both documents page by page, line by line. Added, removed and changed lines are shown separately. It does not compare images or visual layout — a rewritten paragraph with the same words in a different font will not be flagged." } },
+    { "@type": "Question", "name": "Does it work with scanned PDFs?", "acceptedAnswer": { "@type": "Answer", "text": "Scanned pages contain no text layer, so there is nothing to compare. Run them through the OCR tool first to add a text layer, then compare." } },
+    { "@type": "Question", "name": "Are my documents uploaded?", "acceptedAnswer": { "@type": "Answer", "text": "No. Both PDFs are opened and compared locally with pdf.js. Nothing leaves your device." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>pdf</b> <span class="sub">· jsonversal</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="badge-inbrowser"><span class="dot"></span> 100% in your browser</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="breadcrumb"><a href="../">All tools</a> / Compare PDF</nav>
+  <section class="toolhead">
+    <h1>Compare PDF</h1>
+    <p>See exactly what changed between two versions of a document — page by page, line by line. Both files stay in your browser.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1 · Add both documents</h2>
+    <div class="row gap-lg">
+      <div class="col">
+        <div class="dropzone" id="dzA">
+          <div class="dz-icon">📄</div>
+          <p><b>Original (A)</b></p>
+          <p class="hint">Drop the older version here</p>
+        </div>
+        <p class="hint" id="infoA">No file selected.</p>
+      </div>
+      <div class="col">
+        <div class="dropzone" id="dzB">
+          <div class="dz-icon">📄</div>
+          <p><b>Revised (B)</b></p>
+          <p class="hint">Drop the newer version here</p>
+        </div>
+        <p class="hint" id="infoB">No file selected.</p>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:16px">
+      <button class="primary" id="run" type="button" disabled>Compare documents</button>
+      <button class="ghost" id="clear" type="button">Start over</button>
+    </div>
+    <div class="progress" id="prog"><i></i></div>
+    <div class="statusline" id="status"></div>
+  </section>
+
+  <section class="panel" id="reportPanel" style="display:none">
+    <h2>2 · What changed</h2>
+    <div class="cmp-summary" id="cmpSummary"></div>
+    <div id="cmpReport"></div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="ghost" id="dlReport" type="button">⬇ Download report (.md)</button>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="ni">✓</span>
+    <p><b>Runs locally.</b> Both documents are parsed in your browser with pdf.js and compared on your device. Contracts, drafts and confidential revisions never leave your machine — which is exactly why this tool exists.</p>
+  </div>
+
+  <section class="content">
+    <h2>How to compare two PDFs</h2>
+    <ol>
+      <li>Drop the <b>original</b> version into the left box and the <b>revised</b> version into the right box.</li>
+      <li>Click <b>Compare documents</b>.</li>
+      <li>Review the per-page summary: identical pages are skipped, changed pages list added lines (green) and removed lines (red).</li>
+      <li>Download the report as Markdown if you need to share or archive it.</li>
+    </ol>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Comparison is <b>text-level</b>: wording, numbers and clauses are diffed line by line.</li>
+      <li>Pages that exist in only one of the two documents are flagged as added or removed.</li>
+      <li>Scanned documents have no text layer — OCR them first (see the <a href="ocr">OCR tool</a>) if you need to compare scans.</li>
+      <li>Typical use: contract redlines, thesis drafts, invoice revisions, terms of service updates.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Does it compare images and layout?</summary>
+        <p>No. This tool compares the text content of both documents. Visual comparison (pixel-level) is a much heavier operation and is deliberately not offered here.</p>
+      </details>
+      <details>
+        <summary>What if the page count differs?</summary>
+        <p>Pages are matched by number. If the revised document has extra pages, they are reported as "only in B"; missing pages as "only in A".</p>
+      </details>
+      <details>
+        <summary>How exact is the text extraction?</summary>
+        <p>It uses pdf.js, the same engine as Firefox's PDF viewer. Text with complex encodings or unusual fonts may extract imperfectly — worth knowing for scanned or heavily designed documents.</p>
+      </details>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related">
+      <a href="extract-text">Extract Text<span>Pull text from one PDF</span></a>
+      <a href="ocr">OCR PDF<span>Add a text layer to scans</span></a>
+      <a href="merge">Merge PDF<span>Combine documents</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="../">All tools</a>
+      <a href="../privacy">Privacy Policy</a>
+      <a href="https://jsonversal.com">jsonversal.com</a>
+      <a href="https://cloak.jsonversal.com">cloak · privacy tools</a>
+    </div>
+    <strong>pdf · jsonversal</strong> — every tool runs entirely in your browser.
+    Your files are never uploaded to any server. No accounts. No watermarks. No limits.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="cookiebar" id="cookiebar" role="dialog" aria-label="Cookie notice">
+  <p>This site sets <b>no cookies and runs no trackers</b>. We only remember locally that you dismissed this notice.</p>
+  <div class="btn-row"><button class="primary" id="cookie-ok" type="button">Got it</button></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/pdfsite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var P = window.pdfsite;
+  var fileA = null, fileB = null, docA = null, docB = null;
+  var reportMd = '';
+
+  var status = document.getElementById('status');
+  var prog = document.getElementById('prog');
+  var runBtn = document.getElementById('run');
+
+  function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+  function bindDrop(id, infoId, which) {
+    P.makeDropzone(document.getElementById(id), {
+      multiple: false,
+      onFiles: function (fs) {
+        var f = fs[0];
+        if (!isPdf(f)) { P.toast('Only PDF files are supported', true); return; }
+        P.setStatus(status, 'Opening ' + f.name + '…');
+        P.loadPdfjs().then(function () {
+          return P.readAsArrayBuffer(f);
+        }).then(function (bytes) {
+          return pdfjsLib.getDocument({ data: bytes }).promise;
+        }).then(function (doc) {
+          if (which === 'A') { fileA = f; docA = doc; } else { fileB = f; docB = doc; }
+          document.getElementById(infoId).textContent =
+            f.name + ' — ' + doc.numPages + ' page' + (doc.numPages === 1 ? '' : 's');
+          P.setStatus(status, '');
+          runBtn.disabled = !(docA && docB);
+        }).catch(function (e) {
+          P.setStatus(status, '');
+          P.toast(e.message || 'Could not open ' + f.name, true);
+        });
+      }
+    });
+  }
+  bindDrop('dzA', 'infoA', 'A');
+  bindDrop('dzB', 'infoB', 'B');
+
+  document.getElementById('clear').addEventListener('click', function () {
+    fileA = fileB = docA = docB = null;
+    document.getElementById('infoA').textContent = 'No file selected.';
+    document.getElementById('infoB').textContent = 'No file selected.';
+    document.getElementById('reportPanel').style.display = 'none';
+    document.getElementById('cmpReport').innerHTML = '';
+    runBtn.disabled = true;
+    P.setStatus(status, '');
+  });
+
+  /* ---------- text extraction ---------- */
+  function pageText(doc, pageNo) {
+    return doc.getPage(pageNo).then(function (page) {
+      return page.getTextContent();
+    }).then(function (tc) {
+      // group items into lines by y position, then join
+      var lines = {};
+      tc.items.forEach(function (item) {
+        if (!item.str) return;
+        var y = Math.round(item.transform[5]);
+        (lines[y] = lines[y] || []).push({ x: item.transform[4], s: item.str });
+      });
+      return Object.keys(lines).map(Number).sort(function (a, b) { return b - a; }).map(function (y) {
+        return lines[y].sort(function (a, b) { return a.x - b.x; }).map(function (w) { return w.s; }).join(' ').trim();
+      }).filter(function (l) { return l.length; });
+    });
+  }
+
+  /* ---------- line diff (LCS) ---------- */
+  function diffLines(a, b) {
+    var n = a.length, m = b.length;
+    var dp = [];
+    for (var i = 0; i <= n; i++) { dp.push(new Array(m + 1).fill(0)); }
+    for (i = n - 1; i >= 0; i--) {
+      for (var j = m - 1; j >= 0; j--) {
+        dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+      }
+    }
+    var out = [], x = 0, y = 0;
+    while (x < n && y < m) {
+      if (a[x] === b[y]) { out.push({ t: 'same', s: a[x] }); x++; y++; }
+      else if (dp[x + 1][y] >= dp[x][y + 1]) { out.push({ t: 'del', s: a[x] }); x++; }
+      else { out.push({ t: 'add', s: b[y] }); y++; }
+    }
+    while (x < n) { out.push({ t: 'del', s: a[x++] }); }
+    while (y < m) { out.push({ t: 'add', s: b[y++] }); }
+    return out;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  runBtn.addEventListener('click', function () {
+    runBtn.disabled = true;
+    P.setProgress(prog, 3);
+    P.setStatus(status, 'Extracting text…');
+
+    var maxPages = Math.max(docA.numPages, docB.numPages);
+    var pagesA = [], pagesB = [];
+    var chain = Promise.resolve();
+    for (var p = 1; p <= maxPages; p++) {
+      (function (p) {
+        chain = chain.then(function () {
+          P.setStatus(status, 'Reading page ' + p + ' of ' + maxPages + '…');
+          P.setProgress(prog, (p / maxPages) * 70);
+          return Promise.all([
+            p <= docA.numPages ? pageText(docA, p) : Promise.resolve(null),
+            p <= docB.numPages ? pageText(docB, p) : Promise.resolve(null)
+          ]).then(function (r) { pagesA[p] = r[0]; pagesB[p] = r[1]; });
+        });
+      })(p);
+    }
+
+    chain.then(function () {
+      P.setStatus(status, 'Comparing…');
+      P.setProgress(prog, 85);
+      var totalAdd = 0, totalDel = 0, changedPages = 0;
+      var html = '', md = '# PDF comparison report\n\n';
+      md += 'A: ' + (fileA ? fileA.name : '') + ' (' + docA.numPages + ' pages)\n\n';
+      md += 'B: ' + (fileB ? fileB.name : '') + ' (' + docB.numPages + ' pages)\n\n';
+
+      for (var p = 1; p <= maxPages; p++) {
+        var a = pagesA[p], b = pagesB[p];
+        if (a === null) {
+          changedPages++;
+          html += '<div class="cmp-page"><h3>Page ' + p + ' <span class="tag add">only in B</span></h3>' +
+            '<div class="cmp-lines"><div class="ln add">' + esc(b.join('\n')) + '</div></div></div>';
+          md += '## Page ' + p + ' — only in B\n\n+ ' + b.join('\n+ ') + '\n\n';
+          totalAdd += b.length;
+          continue;
+        }
+        if (b === null) {
+          changedPages++;
+          html += '<div class="cmp-page"><h3>Page ' + p + ' <span class="tag del">only in A</span></h3>' +
+            '<div class="cmp-lines"><div class="ln del">' + esc(a.join('\n')) + '</div></div></div>';
+          md += '## Page ' + p + ' — only in A\n\n- ' + a.join('\n- ') + '\n\n';
+          totalDel += a.length;
+          continue;
+        }
+        var d = diffLines(a, b);
+        var adds = d.filter(function (x) { return x.t === 'add'; }).length;
+        var dels = d.filter(function (x) { return x.t === 'del'; }).length;
+        if (!adds && !dels) continue;
+        changedPages++;
+        totalAdd += adds; totalDel += dels;
+        html += '<div class="cmp-page"><h3>Page ' + p + ' <span class="tag chg">+' + adds + ' / −' + dels + '</span></h3><div class="cmp-lines">';
+        md += '## Page ' + p + '\n\n';
+        d.forEach(function (x) {
+          if (x.t === 'same') return;
+          html += '<div class="ln ' + x.t + '">' + (x.t === 'add' ? '+ ' : '− ') + esc(x.s) + '</div>';
+          md += (x.t === 'add' ? '+ ' : '- ') + x.s + '\n';
+        });
+        html += '</div></div>';
+        md += '\n';
+      }
+
+      document.getElementById('cmpSummary').innerHTML =
+        '<span class="stat">Pages compared: <b>' + maxPages + '</b></span>' +
+        '<span class="stat">Pages with changes: <b>' + changedPages + '</b></span>' +
+        '<span class="stat">Lines added: <b>' + totalAdd + '</b></span>' +
+        '<span class="stat">Lines removed: <b>' + totalDel + '</b></span>';
+      var rep = document.getElementById('cmpReport');
+      if (!changedPages) {
+        rep.innerHTML = '<div class="cmp-page"><h3>No differences found</h3><p class="hint">The text of both documents is identical.</p></div>';
+      } else {
+        rep.innerHTML = html;
+      }
+      reportMd = md;
+      document.getElementById('reportPanel').style.display = '';
+      P.setProgress(prog, 100);
+      P.setStatus(status, '');
+      P.toast(changedPages ? changedPages + ' page' + (changedPages === 1 ? '' : 's') + ' changed' : 'Documents are identical');
+    }).catch(function (e) {
+      P.setStatus(status, '');
+      P.toast(e.message || 'Comparison failed', true);
+    }).then(function () { runBtn.disabled = !(docA && docB); });
+  });
+
+  document.getElementById('dlReport').addEventListener('click', function () {
+    P.download(new Blob([reportMd], { type: 'text/markdown' }), 'pdf-comparison.md');
+  });
+
+  P.initCookieBar();
+})();
+</script>
+</body>
+</html>
